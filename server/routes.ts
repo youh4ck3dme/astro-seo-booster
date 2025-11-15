@@ -243,7 +243,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const posts = await storage.getAllBlogPosts();
       const baseUrl = process.env.BASE_URL || "https://stahovanie.website";
       
-      const staticPages = [
+      const staticPages: Array<{ url: string; priority: string; changefreq: string; lastmod?: string }> = [
         { url: "/", priority: "1.0", changefreq: "weekly" },
         { url: "/stahovanie", priority: "0.9", changefreq: "weekly" },
         { url: "/cennik", priority: "0.8", changefreq: "monthly" },
