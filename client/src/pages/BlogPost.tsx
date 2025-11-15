@@ -9,6 +9,7 @@ import { getBlogPostingSchema, getBreadcrumbSchema } from "@/lib/structuredData"
 import { siteConfig } from "@/lib/siteConfig";
 import { Clock, Calendar, ArrowLeft, ArrowRight, User } from "lucide-react";
 import type { BlogPost } from "@shared/schema";
+import { CommentsSection } from "@/components/CommentsSection";
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -142,7 +143,7 @@ export default function BlogPostPage() {
               </span>
               <span className="flex items-center gap-1.5">
                 <User className="h-4 w-4" />
-                {post.author}
+                {post.authorName}
               </span>
             </div>
 
@@ -219,6 +220,11 @@ export default function BlogPostPage() {
             </div>
           </div>
         )}
+
+        {/* Comments Section */}
+        <div className="max-w-3xl mx-auto mt-16">
+          <CommentsSection postId={post.id} />
+        </div>
 
         {/* CTA */}
         <div className="max-w-3xl mx-auto mt-16">

@@ -72,7 +72,7 @@ export function getBlogPostingSchema(post: BlogPost) {
     "dateModified": publishedDate.toISOString(),
     "author": {
       "@type": "Organization",
-      "name": post.author
+      "name": post.authorName
     },
     "publisher": {
       "@type": "Organization",

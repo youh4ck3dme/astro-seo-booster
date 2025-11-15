@@ -12,6 +12,7 @@ import Pricing from "@/pages/Pricing";
 import Contact from "@/pages/Contact";
 import Blog from "@/pages/Blog";
 import BlogPost from "@/pages/BlogPost";
+import AdminComments from "@/pages/AdminComments";
 import NotFound from "@/pages/not-found";
 import { useEffect } from "react";
 import { initGA } from "@/lib/analytics";
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/kontakt" component={Contact} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/admin/comments" component={AdminComments} />
       <Route component={NotFound} />
     </Switch>
   );

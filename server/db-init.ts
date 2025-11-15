@@ -1,6 +1,20 @@
 // Database initialization and seeding
 import { db } from "./db";
-import { blogPosts, type InsertBlogPost } from "@shared/schema";
+import { blogPosts, authors, type InsertBlogPost, type InsertAuthor } from "@shared/schema";
+
+const sampleAuthors: InsertAuthor[] = [
+  {
+    name: "Vladimír Mikuš",
+    slug: "vladimir-mikus",
+    bio: "Majiteľ a zakladateľ VI&MO Sťahovanie. S viac ako 10-ročnými skúsenosťami v oblasti sťahovaných služieb v Bratislave a okolí.",
+    email: "vladimir@viamo.sk",
+  },
+  {
+    name: "VI&MO Team",
+    slug: "viamo-team",
+    bio: "Profesionálny tím sťahovacích expertov so širokou škálou skúseností v oblasti domácich a firemných sťahovaní.",
+  },
+];
 
 const samplePosts: InsertBlogPost[] = [
   {
@@ -57,7 +71,7 @@ Sťahovacia firma vám ušetrí množstvo času a námahy. Pri výbere dbajte na
 S týmito tipmi bude vaše sťahovanie v Bratislave plynulé a bez stresu. Ak potrebujete pomoc, neváhajte nás kontaktovať pre nezáväznú cenovú ponuku.`,
     category: "Tipy a návody",
     tags: ["sťahovanie", "príprava", "balenie", "Bratislava"],
-    author: "VI&MO Team",
+    authorName: "VI&MO Team",
     readingTime: 5,
     metaDescription: "Kompletný návod, ako sa pripraviť na sťahovanie bytu v Bratislave. Tipy na balenie, plánovanie a výber sťahovacej firmy.",
     featured: 1,
@@ -117,7 +131,7 @@ Objednajte si jedlo na deň sťahovania. Nebudete musieť myslieť na varenie a 
 Potrebujete profesionálov na vaše sťahovanie v Bratislave? Kontaktujte nás ešte dnes!`,
     category: "Tipy a návody",
     tags: ["stres", "organizácia", "sťahovanie", "tipy"],
-    author: "VI&MO Team",
+    authorName: "VI&MO Team",
     readingTime: 4,
     metaDescription: "Päť praktických tipov, ako zvládnuť sťahovanie bez stresu. Organizácia, balenie a komunikácia s profesionálmi.",
     featured: 0,
@@ -181,7 +195,7 @@ Po vypratávaní:
 S týmto checklistom zvládnete vypratávanie systematicky a efektívne. Ak potrebujete pomoc s odvozom odpadu a vypratávaním v Bratislave, sme tu pre vás.`,
     category: "Návody",
     tags: ["vypratávanie", "checklist", "upratovanie", "organizácia"],
-    author: "VI&MO Team",
+    authorName: "VI&MO Team",
     readingTime: 6,
     metaDescription: "Praktický checklist pre vypratávanie bytu. Krok za krokom návod, čo treba vyčistiť, vyhodiť a ako sa zbaviť nepotrebných vecí.",
     featured: 0,
@@ -192,17 +206,26 @@ export async function initializeDatabase() {
   try {
     console.log("🔍 Checking database...");
     
-    // Check if posts already exist
-    const existingPosts = await db.select().from(blogPosts);
+    // Check and seed authors
+    const existingAuthors = await db.select().from(authors);
+    if (existingAuthors.length === 0) {
+      console.log("🌱 Seeding sample authors...");
+      for (const author of sampleAuthors) {
+        await db.insert(authors).values(author);
+        console.log(`✅ Seeded author: ${author.name}`);
+      }
+    } else {
+      console.log(`✅ Database already contains ${existingAuthors.length} authors`);
+    }
     
+    // Check and seed blog posts
+    const existingPosts = await db.select().from(blogPosts);
     if (existingPosts.length === 0) {
-      console.log("🌱 Database is empty, seeding sample blog posts...");
-      
+      console.log("🌱 Seeding sample blog posts...");
       for (const post of samplePosts) {
         await db.insert(blogPosts).values(post);
-        console.log(`✅ Seeded: ${post.title}`);
+        console.log(`✅ Seeded post: ${post.title}`);
       }
-      
       console.log("🎉 Database seeded successfully!");
     } else {
       console.log(`✅ Database already contains ${existingPosts.length} blog posts`);

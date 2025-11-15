@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertBlogPostSchema, insertContactSubmissionSchema } from "@shared/schema";
+import { insertBlogPostSchema, insertContactSubmissionSchema, insertAuthorSchema, insertCommentSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Blog Posts Routes
@@ -36,6 +36,124 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Error creating blog post:", error);
       res.status(400).json({ error: error.message || "Invalid blog post data" });
+    }
+  });
+
+  // Authors Routes
+  app.get("/api/authors", async (req, res) => {
+    try {
+      const allAuthors = await storage.getAllAuthors();
+      res.json(allAuthors);
+    } catch (error) {
+      console.error("Error fetching authors:", error);
+      res.status(500).json({ error: "Failed to fetch authors" });
+    }
+  });
+
+  app.get("/api/authors/:slug", async (req, res) => {
+    try {
+      const author = await storage.getAuthor(req.params.slug);
+      if (!author) {
+        return res.status(404).json({ error: "Author not found" });
+      }
+      res.json(author);
+    } catch (error) {
+      console.error("Error fetching author:", error);
+      res.status(500).json({ error: "Failed to fetch author" });
+    }
+  });
+
+  app.post("/api/authors", async (req, res) => {
+    try {
+      const validatedAuthor = insertAuthorSchema.parse(req.body);
+      const author = await storage.createAuthor(validatedAuthor);
+      res.status(201).json(author);
+    } catch (error: any) {
+      console.error("Error creating author:", error);
+      res.status(400).json({ error: error.message || "Invalid author data" });
+    }
+  });
+
+  // Comments Routes
+  app.get("/api/blog/posts/:postId/comments", async (req, res) => {
+    try {
+      const approvedOnly = req.query.approvedOnly !== 'false';
+      const postComments = await storage.getCommentsByPostId(req.params.postId, approvedOnly);
+      res.json(postComments);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      res.status(500).json({ error: "Failed to fetch comments" });
+    }
+  });
+
+  app.get("/api/comments/pending", async (req, res) => {
+    try {
+      // Simple admin protection - in production, use proper authentication
+      const adminKey = req.headers['x-admin-key'] || req.query.admin_key;
+      const expectedKey = process.env.ADMIN_KEY || 'dev_admin_key_123';
+      
+      if (adminKey !== expectedKey) {
+        return res.status(403).json({ error: "Unauthorized: Invalid admin key" });
+      }
+      
+      const allPendingComments: any[] = [];
+      const posts = await storage.getAllBlogPosts();
+      
+      for (const post of posts) {
+        const pending = await storage.getCommentsByPostId(post.id, false);
+        const unapproved = pending.filter(c => !c.approved);
+        
+        allPendingComments.push(...unapproved.map(comment => ({
+          ...comment,
+          postTitle: post.title,
+          postSlug: post.slug,
+        })));
+      }
+      
+      res.json(allPendingComments);
+    } catch (error) {
+      console.error("Error fetching pending comments:", error);
+      res.status(500).json({ error: "Failed to fetch pending comments" });
+    }
+  });
+
+  app.post("/api/blog/posts/:postId/comments", async (req, res) => {
+    try {
+      const commentData = {
+        ...req.body,
+        postId: req.params.postId
+      };
+      const validatedComment = insertCommentSchema.parse(commentData);
+      const comment = await storage.createComment(validatedComment);
+      res.status(201).json({ 
+        success: true, 
+        message: "Váš komentár bol odoslaný a čaká na schválenie.",
+        comment 
+      });
+    } catch (error: any) {
+      console.error("Error creating comment:", error);
+      res.status(400).json({ error: error.message || "Invalid comment data" });
+    }
+  });
+
+  app.patch("/api/comments/:commentId/approve", async (req, res) => {
+    try {
+      // Simple admin protection - in production, use proper authentication
+      const adminKey = req.headers['x-admin-key'] || req.query.admin_key;
+      const expectedKey = process.env.ADMIN_KEY || 'dev_admin_key_123';
+      
+      if (adminKey !== expectedKey) {
+        return res.status(403).json({ error: "Unauthorized: Invalid admin key" });
+      }
+      
+      const comment = await storage.approveComment(req.params.commentId);
+      if (!comment) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+      res.json(comment);
+    } catch (error) {
+      console.error("Error approving comment:", error);
+      res.status(500).json({ error: "Failed to approve comment" });
     }
   });
 
@@ -140,7 +258,7 @@ ${posts.map(post => `    <item>
       <pubDate>${post.publishedAt.toUTCString()}</pubDate>
       <description>${escapeXml(post.excerpt)}</description>
       <category>${escapeXml(post.category)}</category>
-      <author>${escapeXml(post.author)}</author>
+      <author>${escapeXml(post.authorName)}</author>
     </item>`).join('\n')}
   </channel>
 </rss>`;

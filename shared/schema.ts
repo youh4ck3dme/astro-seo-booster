@@ -1,7 +1,29 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+// Authors Schema
+export const authors = pgTable("authors", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  bio: text("bio"),
+  avatar: text("avatar"),
+  email: text("email"),
+  website: text("website"),
+  socialLinkedIn: text("social_linkedin"),
+  socialTwitter: text("social_twitter"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertAuthorSchema = createInsertSchema(authors).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertAuthor = z.infer<typeof insertAuthorSchema>;
+export type Author = typeof authors.$inferSelect;
 
 // Blog Posts Schema
 export const blogPosts = pgTable("blog_posts", {
@@ -13,7 +35,8 @@ export const blogPosts = pgTable("blog_posts", {
   category: text("category").notNull(),
   tags: text("tags").array().notNull().default(sql`ARRAY[]::text[]`),
   featuredImage: text("featured_image"),
-  author: text("author").notNull().default('VI&MO Team'),
+  authorId: varchar("author_id").references(() => authors.id),
+  authorName: text("author_name").notNull().default('VI&MO Team'),
   publishedAt: timestamp("published_at").notNull().defaultNow(),
   readingTime: integer("reading_time").notNull().default(5),
   metaDescription: text("meta_description"),
@@ -47,6 +70,26 @@ export const insertContactSubmissionSchema = createInsertSchema(contactSubmissio
 
 export type InsertContactSubmission = z.infer<typeof insertContactSubmissionSchema>;
 export type ContactSubmission = typeof contactSubmissions.$inferSelect;
+
+// Comments Schema
+export const comments = pgTable("comments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  postId: varchar("post_id").notNull().references(() => blogPosts.id, { onDelete: 'cascade' }),
+  authorName: text("author_name").notNull(),
+  authorEmail: text("author_email").notNull(),
+  content: text("content").notNull(),
+  approved: boolean("approved").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertCommentSchema = createInsertSchema(comments).omit({
+  id: true,
+  createdAt: true,
+  approved: true,
+});
+
+export type InsertComment = z.infer<typeof insertCommentSchema>;
+export type Comment = typeof comments.$inferSelect;
 
 // Service data type (static content, no database table needed)
 export type Service = {
