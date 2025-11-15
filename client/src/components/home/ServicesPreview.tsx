@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Home, Building2, Trash2, Sparkles, ArrowRight } from "lucide-react";
+import { trackServiceView } from "@/lib/analytics";
 
 const services = [
   {
@@ -40,8 +41,11 @@ export function ServicesPreview() {
         {services.map((service) => {
           const IconComponent = service.icon;
           return (
-            <Link key={service.title} href={service.href}>
-              <div>
+            <div key={service.title}>
+              <Link 
+                href={service.href}
+                onClick={() => trackServiceView(service.title)}
+              >
                 <Card className="h-full hover-elevate transition-all cursor-pointer group" data-testid={`card-service-${service.title.split(' ')[0].toLowerCase()}`}>
                   <CardHeader className="space-y-4">
                     <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -62,8 +66,8 @@ export function ServicesPreview() {
                     </span>
                   </CardFooter>
                 </Card>
-              </div>
-            </Link>
+              </Link>
+            </div>
           );
         })}
       </div>

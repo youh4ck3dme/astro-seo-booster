@@ -271,6 +271,59 @@ ${posts.map(post => `    <item>
     }
   });
 
+  // Google Places API - Get Reviews and Location Data
+  app.get("/api/google-reviews", async (req, res) => {
+    try {
+      const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+      const placeId = process.env.GOOGLE_PLACE_ID || 'ChIJAbCdYpBfbEcRYXZ3z0vLPPw';
+      
+      if (!apiKey) {
+        return res.json({
+          reviews: [],
+          location: null,
+          message: "Google Places API key not configured"
+        });
+      }
+      
+      // Fetch place details including reviews
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,rating,user_ratings_total,reviews,formatted_address,formatted_phone_number,opening_hours,website&key=${apiKey}&language=sk`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Google Places API error: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
+        throw new Error(`Google Places API returned status: ${data.status}`);
+      }
+      
+      const result = data.result || {};
+      
+      res.json({
+        reviews: result.reviews || [],
+        location: {
+          name: result.name,
+          rating: result.rating,
+          userRatingsTotal: result.user_ratings_total,
+          address: result.formatted_address,
+          phone: result.formatted_phone_number,
+          openingHours: result.opening_hours,
+          website: result.website
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching Google reviews:", error);
+      res.status(500).json({ 
+        error: "Failed to fetch Google reviews",
+        reviews: [],
+        location: null
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

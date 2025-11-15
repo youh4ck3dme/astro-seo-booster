@@ -85,11 +85,25 @@ Preferred communication style: Simple, everyday language.
 - Breadcrumb navigation with structured data
 - Canonical URLs and Open Graph tags on all pages
 
-**Analytics**
-- Google Analytics 4 integration via gtag.js
+**Analytics & Performance**
+- **Google Analytics 4** integration via gtag.js
+- **Core Web Vitals** tracking (CLS, FID, FCP, LCP, TTFB, INP) via web-vitals library
+- **Conversion tracking** for:
+  - Form submissions (quote requests)
+  - Phone clicks
+  - Email clicks
+  - Service views
+  - Blog post reads
 - Custom page view tracking for SPA navigation
-- Event tracking utilities prepared for conversion tracking
-- Environment variable configuration for measurement ID
+- Event tracking with detailed categorization
+- Performance metrics sent to Google Analytics
+
+**Google Business Profile Integration**
+- **Google Places API** integration for reviews and location data
+- Automatic fetching of business ratings and reviews
+- Display of up to 6 most recent Google reviews
+- Location information display (address, phone, hours)
+- Real-time review updates from Google
 
 **Content Strategy**
 - Slovak-language content optimization
@@ -123,10 +137,13 @@ Preferred communication style: Simple, everyday language.
 - Connection via `@neondatabase/serverless` package
 - Environment variable: `DATABASE_URL`
 
-**Analytics**
-- **Google Analytics 4** - Web analytics and conversion tracking
-- Environment variable: `VITE_GA_MEASUREMENT_ID`
-- Client-side tracking implementation
+**Analytics & Monitoring**
+- **Google Analytics 4** - Web analytics, conversion tracking, Core Web Vitals
+- **Google Places API** - Business reviews and location data
+- Environment variables: 
+  - `VITE_GA_MEASUREMENT_ID` (required for analytics)
+  - `GOOGLE_PLACES_API_KEY` (optional, for reviews)
+  - `GOOGLE_PLACE_ID` (optional, defaults to example ID)
 
 ### Key npm Packages
 
@@ -164,4 +181,49 @@ Preferred communication style: Simple, everyday language.
 **Environment Configuration**
 - Development: `NODE_ENV=development` with Vite dev server
 - Production: `NODE_ENV=production` with static file serving
-- Required secrets: `DATABASE_URL`, `VITE_GA_MEASUREMENT_ID`
+
+**Required Environment Variables**
+- `DATABASE_URL` - PostgreSQL connection string
+- `VITE_GA_MEASUREMENT_ID` - Google Analytics 4 measurement ID
+- `SESSION_SECRET` - Session encryption secret
+- `ADMIN_KEY` - Admin panel authentication key (defaults to 'dev_admin_key_123')
+
+**Optional Environment Variables**
+- `GOOGLE_PLACES_API_KEY` - Google Places API key for reviews
+- `GOOGLE_PLACE_ID` - Google Place ID for business location
+- `BASE_URL` - Base URL for sitemap and RSS generation
+
+## Advanced Features
+
+### Blog System with Moderation
+- Author profiles with bio, social links, and avatars
+- Comment system with admin moderation
+- Admin panel at `/admin/comments` with authentication
+- Comments require approval before publication
+- Automatic database seeding for demo content
+
+### Performance Monitoring
+- Real-time Core Web Vitals tracking
+- Metrics sent to Google Analytics:
+  - Cumulative Layout Shift (CLS)
+  - First Input Delay (FID)
+  - First Contentful Paint (FCP)
+  - Largest Contentful Paint (LCP)
+  - Time to First Byte (TTFB)
+  - Interaction to Next Paint (INP)
+- Automatic performance degradation detection
+
+### Conversion Tracking
+- Form submission tracking with apartment size
+- Phone and email click tracking
+- Service page view tracking
+- Blog reading time tracking
+- Quote request conversions
+- Event categorization for analysis
+
+### Google Business Integration
+- Automatic review fetching from Google Places
+- Business rating and review count display
+- Recent customer reviews showcase
+- Location data integration
+- Direct links to Google Business Profile

@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { siteConfig } from "@/lib/siteConfig";
 import { Phone, Mail, MapPin, Truck } from "lucide-react";
+import { trackPhoneClick, trackEmailClick } from "@/lib/analytics";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -67,6 +68,7 @@ export function Footer() {
                 <a 
                   href={`tel:${siteConfig.phone.replace(/\s/g, '')}`}
                   className="text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={trackPhoneClick}
                   data-testid="link-phone"
                 >
                   {siteConfig.phone}
@@ -77,6 +79,7 @@ export function Footer() {
                 <a 
                   href={`mailto:${siteConfig.email}`}
                   className="text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={trackEmailClick}
                   data-testid="link-email"
                 >
                   {siteConfig.email}

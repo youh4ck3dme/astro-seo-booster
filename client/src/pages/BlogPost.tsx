@@ -1,5 +1,6 @@
 import { useParams, Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import { siteConfig } from "@/lib/siteConfig";
 import { Clock, Calendar, ArrowLeft, ArrowRight, User } from "lucide-react";
 import type { BlogPost } from "@shared/schema";
 import { CommentsSection } from "@/components/CommentsSection";
+import { trackBlogRead } from "@/lib/analytics";
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -22,6 +24,12 @@ export default function BlogPostPage() {
   const { data: allPosts } = useQuery<BlogPost[]>({
     queryKey: ["/api/blog/posts"],
   });
+
+  useEffect(() => {
+    if (post) {
+      trackBlogRead(post.title, post.readingTime);
+    }
+  }, [post]);
 
   if (isLoading) {
     return (

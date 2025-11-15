@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { insertContactSubmissionSchema, type InsertContactSubmission } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { Loader2, CheckCircle2 } from "lucide-react";
+import { trackQuoteRequest } from "@/lib/analytics";
 
 export function QuoteForm() {
   const { toast } = useToast();
@@ -32,9 +33,10 @@ export function QuoteForm() {
     mutationFn: async (data: InsertContactSubmission) => {
       return await apiRequest("POST", "/api/contact", data);
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       setSubmitted(true);
       form.reset();
+      trackQuoteRequest(variables.apartmentSize);
       toast({
         title: "Ďakujeme za vašu správu!",
         description: "Ozveme sa vám čo najskôr s cenovou ponukou.",

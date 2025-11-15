@@ -61,3 +61,85 @@ export const trackEvent = (
     value: value,
   });
 };
+
+// GA4 Conversion Tracking Functions
+export const trackPhoneClick = () => {
+  if (typeof window === 'undefined' || !window.gtag) return;
+  
+  window.gtag('event', 'phone_click', {
+    event_category: 'conversion',
+    event_label: 'contact_phone',
+  });
+};
+
+export const trackEmailClick = () => {
+  if (typeof window === 'undefined' || !window.gtag) return;
+  
+  window.gtag('event', 'email_click', {
+    event_category: 'conversion',
+    event_label: 'contact_email',
+  });
+};
+
+export const trackServiceView = (serviceName: string) => {
+  if (typeof window === 'undefined' || !window.gtag) return;
+  
+  window.gtag('event', 'service_view', {
+    event_category: 'engagement',
+    event_label: serviceName,
+  });
+};
+
+export const trackBlogRead = (postTitle: string, readingTime: number) => {
+  if (typeof window === 'undefined' || !window.gtag) return;
+  
+  window.gtag('event', 'blog_read', {
+    event_category: 'engagement',
+    event_label: postTitle,
+    value: readingTime,
+  });
+};
+
+export const trackQuoteRequest = (apartmentSize?: string, value?: number) => {
+  if (typeof window === 'undefined' || !window.gtag) return;
+  
+  window.gtag('event', 'quote_request', {
+    event_category: 'conversion',
+    event_label: apartmentSize || 'unknown_size',
+    value: value,
+    currency: 'EUR',
+  });
+};
+
+// Core Web Vitals Tracking
+export const initWebVitals = async () => {
+  if (typeof window === 'undefined') return;
+  
+  try {
+    const { onCLS, onFID, onFCP, onLCP, onTTFB, onINP } = await import('web-vitals');
+    
+    const sendToAnalytics = ({ name, value, id, rating }: { name: string; value: number; id: string; rating?: string }) => {
+      if (window.gtag) {
+        window.gtag('event', name, {
+          event_category: 'Web Vitals',
+          event_label: id,
+          value: Math.round(name === 'CLS' ? value * 1000 : value),
+          metric_rating: rating,
+          non_interaction: true,
+        });
+      }
+    };
+    
+    // Track all Core Web Vitals
+    onCLS(sendToAnalytics);
+    onFID(sendToAnalytics);
+    onFCP(sendToAnalytics);
+    onLCP(sendToAnalytics);
+    onTTFB(sendToAnalytics);
+    onINP(sendToAnalytics);
+    
+    console.log('✅ Core Web Vitals tracking initialized');
+  } catch (error) {
+    console.error('Failed to initialize Web Vitals:', error);
+  }
+};

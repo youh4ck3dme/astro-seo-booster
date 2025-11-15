@@ -5,6 +5,7 @@ import { buildSeo } from "@/lib/seo";
 import { getBreadcrumbSchema } from "@/lib/structuredData";
 import { siteConfig } from "@/lib/siteConfig";
 import { Phone, Mail, MapPin, FileText } from "lucide-react";
+import { trackPhoneClick, trackEmailClick } from "@/lib/analytics";
 
 export default function Contact() {
   const seo = buildSeo({
@@ -53,6 +54,7 @@ export default function Contact() {
                       <a 
                         href={`tel:${siteConfig.phone.replace(/\s/g, '')}`}
                         className="text-primary hover:underline"
+                        onClick={trackPhoneClick}
                         data-testid="link-contact-phone"
                       >
                         {siteConfig.phone}
@@ -72,6 +74,7 @@ export default function Contact() {
                       <a 
                         href={`mailto:${siteConfig.email}`}
                         className="text-primary hover:underline"
+                        onClick={trackEmailClick}
                         data-testid="link-contact-email"
                       >
                         {siteConfig.email}

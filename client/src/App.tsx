@@ -15,7 +15,7 @@ import BlogPost from "@/pages/BlogPost";
 import AdminComments from "@/pages/AdminComments";
 import NotFound from "@/pages/not-found";
 import { useEffect } from "react";
-import { initGA } from "@/lib/analytics";
+import { initGA, initWebVitals } from "@/lib/analytics";
 import { useAnalytics } from "@/hooks/use-analytics";
 
 function Router() {
@@ -41,6 +41,17 @@ function App() {
       console.warn('Missing required Google Analytics key: VITE_GA_MEASUREMENT_ID');
     } else {
       initGA();
+      
+      // Wait for gtag to be available before initializing Web Vitals
+      const checkGtag = setInterval(() => {
+        if (typeof window !== 'undefined' && window.gtag) {
+          clearInterval(checkGtag);
+          initWebVitals();
+        }
+      }, 100);
+      
+      // Cleanup: clear interval after 10 seconds if gtag never loads
+      setTimeout(() => clearInterval(checkGtag), 10000);
     }
   }, []);
 
