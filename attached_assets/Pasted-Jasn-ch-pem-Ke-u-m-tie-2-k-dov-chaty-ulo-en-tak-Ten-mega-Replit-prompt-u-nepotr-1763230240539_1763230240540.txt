@@ -1,0 +1,99 @@
+Jasnéé, chápem 😊
+Keď už máš tie 2 kódové chaty uložené, tak:
+
+👉 **Ten mega Replit prompt už nepotrebuješ.**
+Si v móde: *“mám kód, teraz to len rozbehnúť a doladiť”*.
+
+---
+
+## 🔧 Čo ti stačí na Replite spraviť teraz
+
+1. Skontroluj, že máš v projekte tieto súbory (podľa toho, čo sme už riešili):
+
+* `package.json` so skriptmi:
+
+```json
+"scripts": {
+  "dev": "astro dev --host 0.0.0.0 --port 3000",
+  "build": "astro build",
+  "preview": "astro preview --host 0.0.0.0 --port 3000"
+}
+```
+
+* `astro.config.mjs`
+* `tsconfig.json`
+* `.replit` s `run = "npm run dev"`
+* `src/` štruktúru s layouts, components, features, pages, styles
+
+2. V shelli Replita daj:
+
+```bash
+npm install
+npm run dev
+```
+
+A ak sa appka zobrazí → **si hotový základ.** 🚚
+
+---
+
+## 💡 Bonus: ešte dva malé SEO súbory (voliteľné, ale odporúčam)
+
+Ak chceš, aby bol projekt "komplet" aj SEO papierovo, pridaj do rootu:
+
+### `public/robots.txt`
+
+Pre `stahovanie.website` (a neskôr kľudne aj pre `stahovanie-bratislava.info`):
+
+```txt
+User-agent: *
+Allow: /
+
+Sitemap: https://stahovanie.website/sitemap.xml
+```
+
+### `public/sitemap.xml`
+
+Zatiaľ ručne (staticky) pre hlavné stránky:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://stahovanie.website/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://stahovanie.website/stahovanie</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://stahovanie.website/cennik</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://stahovanie.website/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://stahovanie.website/kontakt</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>
+```
+
+Keď potom pôjdeš na `stahovanie-bratislava.info`, spravíme verziu s tou doménou.
+
+---
+
+### TL;DR
+
+* Nie, už nepotrebuješ ďalší prompt, keď máš tie dva kódové chaty uložené.
+* Stačí: `npm install` + `npm run dev` na Replite a skontrolovať, že všetky `.astro` súbory sedia.
+* Ak chceš next level: dorobíme JSON-LD (LocalBusiness + Services) pre každú stránku.
+
+Ak chceš, môžeme **hneď ďalší krok**: JSON-LD pre VI&MO + služby rovno do `BaseLayout` alebo do jednotlivých pages. Stačí povedať „daj JSON-LD“ a vyberieme štýl 😈
