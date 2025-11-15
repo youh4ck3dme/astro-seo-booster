@@ -88,12 +88,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/comments/pending", async (req, res) => {
     try {
-      // Simple admin protection - in production, use proper authentication
-      const adminKey = req.headers['x-admin-key'] || req.query.admin_key;
-      const expectedKey = process.env.ADMIN_KEY || 'dev_admin_key_123';
+      // Require ADMIN_KEY environment variable - no defaults for security
+      const expectedKey = process.env.ADMIN_KEY;
       
-      if (adminKey !== expectedKey) {
-        return res.status(403).json({ error: "Unauthorized: Invalid admin key" });
+      if (!expectedKey) {
+        console.error("ADMIN_KEY environment variable not set");
+        return res.status(500).json({ error: "Server configuration error: ADMIN_KEY not configured" });
+      }
+      
+      // Security: Only accept admin key via header (not query string to prevent leaks in logs/referrers)
+      const adminKey = req.headers['x-admin-key'] as string | undefined;
+      
+      if (!adminKey || adminKey !== expectedKey) {
+        return res.status(403).json({ error: "Unauthorized: Invalid or missing admin key" });
       }
       
       const allPendingComments: any[] = [];
@@ -138,12 +145,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch("/api/comments/:commentId/approve", async (req, res) => {
     try {
-      // Simple admin protection - in production, use proper authentication
-      const adminKey = req.headers['x-admin-key'] || req.query.admin_key;
-      const expectedKey = process.env.ADMIN_KEY || 'dev_admin_key_123';
+      // Require ADMIN_KEY environment variable - no defaults for security
+      const expectedKey = process.env.ADMIN_KEY;
       
-      if (adminKey !== expectedKey) {
-        return res.status(403).json({ error: "Unauthorized: Invalid admin key" });
+      if (!expectedKey) {
+        console.error("ADMIN_KEY environment variable not set");
+        return res.status(500).json({ error: "Server configuration error: ADMIN_KEY not configured" });
+      }
+      
+      // Security: Only accept admin key via header (not query string to prevent leaks in logs/referrers)
+      const adminKey = req.headers['x-admin-key'] as string | undefined;
+      
+      if (!adminKey || adminKey !== expectedKey) {
+        return res.status(403).json({ error: "Unauthorized: Invalid or missing admin key" });
       }
       
       const comment = await storage.approveComment(req.params.commentId);

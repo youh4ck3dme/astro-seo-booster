@@ -113,10 +113,22 @@ export const trackQuoteRequest = (apartmentSize?: string, value?: number) => {
 
 // Core Web Vitals Tracking
 export const initWebVitals = async () => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {
+    console.warn('initWebVitals called in non-browser environment');
+    return;
+  }
+  
+  if (!window.gtag) {
+    console.warn('gtag not available, skipping Web Vitals initialization');
+    return;
+  }
   
   try {
-    const { onCLS, onFID, onFCP, onLCP, onTTFB, onINP } = await import('web-vitals');
+    const webVitalsModule = await import('web-vitals');
+    console.log('✅ web-vitals module loaded successfully');
+    
+    // Note: onFID removed in web-vitals v5 (March 2024) - INP replaced FID as Core Web Vital
+    const { onCLS, onFCP, onLCP, onTTFB, onINP } = webVitalsModule;
     
     const sendToAnalytics = ({ name, value, id, rating }: { name: string; value: number; id: string; rating?: string }) => {
       if (window.gtag) {
@@ -130,9 +142,8 @@ export const initWebVitals = async () => {
       }
     };
     
-    // Track all Core Web Vitals
+    // Track all Core Web Vitals (v5: INP replaced FID)
     onCLS(sendToAnalytics);
-    onFID(sendToAnalytics);
     onFCP(sendToAnalytics);
     onLCP(sendToAnalytics);
     onTTFB(sendToAnalytics);
@@ -140,6 +151,9 @@ export const initWebVitals = async () => {
     
     console.log('✅ Core Web Vitals tracking initialized');
   } catch (error) {
-    console.error('Failed to initialize Web Vitals:', error);
+    console.error('Failed to initialize Web Vitals - detailed error:', error);
+    console.error('Error name:', (error as Error)?.name);
+    console.error('Error message:', (error as Error)?.message);
+    console.error('Error stack:', (error as Error)?.stack);
   }
 };

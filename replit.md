@@ -186,7 +186,7 @@ Preferred communication style: Simple, everyday language.
 - `DATABASE_URL` - PostgreSQL connection string
 - `VITE_GA_MEASUREMENT_ID` - Google Analytics 4 measurement ID
 - `SESSION_SECRET` - Session encryption secret
-- `ADMIN_KEY` - Admin panel authentication key (defaults to 'dev_admin_key_123')
+- `ADMIN_KEY` - **REQUIRED** Admin panel authentication key for comment moderation (no default for security)
 
 **Optional Environment Variables**
 - `GOOGLE_PLACES_API_KEY` - Google Places API key for reviews
@@ -206,11 +206,10 @@ Preferred communication style: Simple, everyday language.
 - Real-time Core Web Vitals tracking
 - Metrics sent to Google Analytics:
   - Cumulative Layout Shift (CLS)
-  - First Input Delay (FID)
+  - Interaction to Next Paint (INP) *replaced FID in March 2024*
   - First Contentful Paint (FCP)
   - Largest Contentful Paint (LCP)
   - Time to First Byte (TTFB)
-  - Interaction to Next Paint (INP)
 - Automatic performance degradation detection
 
 ### Conversion Tracking

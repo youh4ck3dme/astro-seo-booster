@@ -28,15 +28,10 @@ export default function AdminCommentsPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    // Security: Only use localStorage (no URL params to prevent credential leaks)
     const savedKey = localStorage.getItem("admin_key");
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlKey = urlParams.get("admin_key");
     
-    if (urlKey) {
-      setAdminKey(urlKey);
-      setIsAuthenticated(true);
-      localStorage.setItem("admin_key", urlKey);
-    } else if (savedKey) {
+    if (savedKey) {
       setAdminKey(savedKey);
       setIsAuthenticated(true);
     }
@@ -150,7 +145,7 @@ export default function AdminCommentsPage() {
                 </Button>
               </form>
               <div className="mt-4 text-xs text-muted-foreground">
-                Pre development použite: <code className="bg-muted px-1 rounded">dev_admin_key_123</code>
+                Admin kľúč musí byť nastavený v prostredí ADMIN_KEY pre bezpečnosť.
               </div>
             </CardContent>
           </Card>
