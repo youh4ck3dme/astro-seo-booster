@@ -1,0 +1,1185 @@
+1️⃣ Štruktúra projektu (ASTRO + “Flutter style” features)
+
+bratislava-stahovanie-astro/
+├─ astro.config.mjs
+├─ package.json
+├─ tsconfig.json (voliteľné)
+├─ src/
+│  ├─ core/
+│  │  ├─ siteConfig.ts
+│  │  └─ seo.ts
+│  │
+│  ├─ layouts/
+│  │  └─ BaseLayout.astro
+│  │
+│  ├─ components/
+│  │  ├─ Header.astro
+│  │  ├─ Footer.astro
+│  │  └─ Container.astro
+│  │
+│  ├─ features/
+│  │  ├─ home/
+│  │  │  ├─ HeroSection.astro
+│  │  │  ├─ ServicesPreview.astro
+│  │  │  ├─ MiniPricing.astro
+│  │  │  └─ MiniBlog.astro
+│  │  │
+│  │  ├─ moving/
+│  │  │  └─ MovingContent.astro
+│  │  │
+│  │  ├─ pricing/
+│  │  │  └─ PricingContent.astro
+│  │  │
+│  │  ├─ contact/
+│  │  │  └─ ContactInfo.astro
+│  │  │
+│  │  ├─ blog/
+│  │  │  └─ BlogOverview.astro
+│  │  │
+│  │  └─ shared/
+│  │     └─ QuoteForm.astro
+│  │
+│  ├─ pages/
+│  │  ├─ index.astro
+│  │  ├─ stahovanie.astro
+│  │  ├─ cennik.astro
+│  │  ├─ kontakt.astro
+│  │  └─ blog.astro
+│  │
+│  └─ styles/
+│     └─ global.css
+└─ public/
+   └─ (favicon, obrázky, atď.)
+
+2️⃣ src/core/siteConfig.ts
+
+// src/core/siteConfig.ts
+export const siteConfig = {
+  name: "VI&MO Sťahovanie",
+  baseUrl: "https://stahovanie.website",
+  phone: "+421 911 275 755",
+  email: "info@viandmo.com",
+  addressLine: "Karpatské námestie 7770/10A, 831 06 Bratislava - Rača",
+  ico: "56 811 322",
+  dic: "2122461176",
+};
+
+3️⃣ src/core/seo.ts – helper pre title/description
+
+// src/core/seo.ts
+import type { siteConfig as SiteConfigType } from "./siteConfig";
+import { siteConfig } from "./siteConfig";
+
+type SEOInput = {
+  title?: string;
+  description?: string;
+  path?: string;
+};
+
+export function buildSeo({ title, description, path = "/" }: SEOInput) {
+  const fullTitle = title
+    ? `${title} | ${siteConfig.name}`
+    : siteConfig.name;
+
+  const url = new URL(path, siteConfig.baseUrl).toString();
+
+  return {
+    title: fullTitle,
+    description:
+      description ??
+      "Bezstarostné sťahovanie bytov, domov a firiem v Bratislave – VI&MO.",
+    url,
+  };
+}
+
+4️⃣ src/layouts/BaseLayout.astro
+
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { buildSeo } from "../core/seo";
+
+const {
+  title,
+  description,
+  path = Astro.url.pathname,
+} = Astro.props;
+
+const seo = buildSeo({ title, description, path });
+---
+
+<html lang="sk">
+  <head>
+    <meta charset="utf-8" />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="icon" href="/favicon.ico" />
+
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={seo.url} />
+
+    <meta name="robots" content="index,follow" />
+  </head>
+  <body class="app-body">
+    <Header />
+    <main class="app-main">
+      <div class="app-container">
+        <slot />
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+5️⃣ src/components/Header.astro
+
+---
+import { siteConfig } from "../core/siteConfig";
+---
+
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <span class="logo-icon">🚚</span>
+      <span class="logo-text">{siteConfig.name}</span>
+    </a>
+
+    <nav class="nav">
+      <a href="/" class="nav-link">Domov</a>
+      <a href="/stahovanie" class="nav-link">Sťahovanie</a>
+      <a href="/cennik" class="nav-link">Cenník</a>
+      <a href="/blog" class="nav-link">Blog</a>
+      <a href="/kontakt" class="nav-link">Kontakt</a>
+      <a href="/kontakt" class="btn-cta">Nezáväzná ponuka</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(18px);
+    background: rgba(248, 250, 252, 0.9);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+  }
+  .header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .logo-icon {
+    font-size: 22px;
+  }
+  .logo-text {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .nav {
+    margin-left: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-link {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    padding: 6px 8px;
+    text-decoration: none;
+    color: #111827;
+  }
+  .btn-cta {
+    border-radius: 999px;
+    border: none;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    background: #111827;
+    color: white;
+  }
+
+  @media (max-width: 640px) {
+    .header-inner {
+      flex-wrap: wrap;
+    }
+    .nav {
+      justify-content: flex-start;
+    }
+  }
+</style>
+
+6️⃣ src/components/Footer.astro
+
+---
+import { siteConfig } from "../core/siteConfig";
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-text">
+      © {year} {siteConfig.name} – Sťahovanie Bratislava
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid rgba(148, 163, 184, 0.4);
+    padding: 12px 16px 20px;
+    background: #f9fafb;
+  }
+  .footer-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  .footer-text {
+    font-size: 12px;
+    color: #6b7280;
+  }
+</style>
+
+7️⃣ HOME features
+src/features/home/HeroSection.astro
+
+---
+---
+
+<section class="card hero">
+  <div class="hero-grid">
+    <div>
+      <h1 class="h1">Bezstarostné sťahovanie v Bratislave</h1>
+      <p class="text">
+        Presťahujeme vás rýchlo, bezpečne a férovo – byty, domy, kancelárie, sklady.
+        Zabezpečíme balenie, demontáž, prevoz aj vypratávanie nepotrebných vecí.
+      </p>
+      <div class="hero-actions">
+        <a href="/kontakt" class="btn-cta">Nezáväzná cenová ponuka</a>
+        <a href="/cennik" class="btn-secondary">Pozrieť cenník</a>
+      </div>
+      <p class="muted">
+        ✅ Poistenie zodpovednosti • Skúsený tím • Férové ceny
+      </p>
+    </div>
+    <div class="hero-illu">
+      <div class="hero-gradient">
+        <span class="hero-truck">🚛</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .card {
+    background: white;
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: 0 18px 45px rgba(15,23,42,0.08);
+  }
+  .hero-grid {
+    display: grid;
+    gap: 24px;
+  }
+  @media (min-width: 900px) {
+    .hero-grid {
+      grid-template-columns: minmax(0,1.4fr) minmax(0,1fr);
+    }
+  }
+  .hero-illu {
+    display: none;
+  }
+  @media (min-width: 900px) {
+    .hero-illu {
+      display: block;
+    }
+  }
+  .hero-gradient {
+    border-radius: 24px;
+    background: linear-gradient(135deg,#22c55e,#059669,#0369a1);
+    min-height: 220px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .hero-truck {
+    font-size: 80px;
+  }
+  .h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+    margin: 0 0 8px;
+  }
+  .text {
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 8px;
+  }
+  .muted {
+    font-size: 12px;
+    color: #6b7280;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0 4px;
+  }
+  .btn-cta,
+  .btn-secondary {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:999px;
+    padding:8px 14px;
+    font-size:14px;
+    text-decoration:none;
+  }
+  .btn-cta {
+    background:#111827;
+    color:#fff;
+  }
+  .btn-secondary {
+    background:#fff;
+    color:#111827;
+    border:1px solid #cbd5f5;
+  }
+</style>
+src/features/home/ServicesPreview.astro
+
+---
+const services = [
+  {
+    title: "Sťahovanie bytov a domov",
+    desc: "Kompletné sťahovanie v Bratislave – balenie, demontáž, prevoz, montáž.",
+    icon: "🏠",
+    href: "/stahovanie",
+  },
+  {
+    title: "Sťahovanie firiem a kancelárií",
+    desc: "Firemné sťahovanie s minimálnym výpadkom prevádzky.",
+    icon: "🏢",
+    href: "/stahovanie",
+  },
+  {
+    title: "Vypratávanie a odvoz odpadu",
+    desc: "Vypratávanie bytov, pivníc, garáží a odvoz do zberného dvora.",
+    icon: "🧹",
+    href: "/stahovanie",
+  },
+  {
+    title: "Upratovanie a čistenie",
+    desc: "Jednorazové aj pravidelné upratovanie domácností a firiem.",
+    icon: "✨",
+    href: "/stahovanie",
+  },
+];
+---
+
+<section class="section">
+  <h2 class="h2">Naše služby</h2>
+  <div class="grid">
+    {services.map((s) => (
+      <a href={s.href} class="service-card">
+        <div class="service-icon">{s.icon}</div>
+        <h3 class="h3">{s.title}</h3>
+        <p class="text">{s.desc}</p>
+        <span class="link-text">Zistiť viac →</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .section {
+    margin-top: 24px;
+  }
+  .h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .service-card {
+    background:white;
+    border-radius:18px;
+    padding:16px;
+    border:1px solid rgba(148,163,184,0.4);
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    text-decoration:none;
+    color:#111827;
+  }
+  .service-icon {
+    font-size:24px;
+  }
+  .h3 {
+    font-size:17px;
+    font-weight:600;
+    margin:0 0 4px;
+  }
+  .text {
+    font-size:14px;
+    line-height:1.6;
+    margin:0 0 4px;
+  }
+  .link-text {
+    font-size:13px;
+    color:#2563eb;
+    margin-top:auto;
+  }
+</style>
+src/features/home/MiniPricing.astro
+
+---
+const base = {
+  "Garsónka": "od 65 €",
+  "1-izbový byt": "od 70 €",
+  "2-izbový byt": "od 140 €",
+  "3-izbový byt": "od 240 €",
+  "4-izbový byt": "od 350 €",
+  "Rodinný dom": "podľa obhliadky",
+};
+---
+
+<section class="card">
+  <h2 class="h2">Orientačný cenník sťahovania</h2>
+  <p class="text">
+    Ceny sú orientačné – presnú ponuku pripravíme podľa množstva vecí,
+    poschodia a vzdialenosti.
+  </p>
+  <div>
+    {Object.entries(base).map(([key, value]) => (
+      <div class="row">
+        <span>{key}</span>
+        <span class="bold">{value}</span>
+      </div>
+    ))}
+  </div>
+  <div class="align-right">
+    <a href="/cennik" class="link">Zobraziť celý cenník →</a>
+  </div>
+</section>
+
+<style>
+  .card {
+    background:white;
+    border-radius:24px;
+    padding:20px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+    margin-top:24px;
+  }
+  .h2 { font-size:22px; font-weight:700; margin:0 0 8px; }
+  .text { font-size:14px; line-height:1.6; margin:0 0 8px; }
+  .row {
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    padding:3px 0;
+  }
+  .bold { font-weight:600; }
+  .align-right {
+    text-align:right;
+    margin-top:8px;
+  }
+  .link {
+    font-size:14px;
+    color:#2563eb;
+    text-decoration:none;
+  }
+</style>
+src/features/home/MiniBlog.astro
+
+---
+const posts = [
+  "Ako sa pripraviť na sťahovanie bytu v Bratislave",
+  "5 tipov, ako znížiť stres pri sťahovaní",
+  "Vypratávanie bytu – praktický checklist",
+];
+---
+
+<section class="section">
+  <h2 class="h2">Z nášho blogu</h2>
+  {posts.map((title) => (
+    <a href="/blog" class="blog-item">
+      <span>{title}</span>
+      <span>Čítať viac →</span>
+    </a>
+  ))}
+</section>
+
+<style>
+  .section { margin-top:24px; }
+  .h2 { font-size:22px; font-weight:700; margin:0 0 8px; }
+  .blog-item {
+    padding:10px 0;
+    border-bottom:1px solid rgba(148,163,184,0.4);
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    text-decoration:none;
+    color:#111827;
+  }
+</style>
+
+8️⃣ Shared formulár – src/features/shared/QuoteForm.astro
+
+---
+import { useState } from "react";
+
+const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">(
+  "idle"
+);
+
+function handleSubmit(e: Event) {
+  e.preventDefault();
+  const form = e.target as HTMLFormElement;
+  const data = new FormData(form);
+
+  const name = data.get("name")?.toString().trim();
+  const phone = data.get("phone")?.toString().trim();
+  const email = data.get("email")?.toString().trim();
+
+  if (!name || !phone || !email) {
+    setStatus("error");
+    return;
+  }
+
+  setStatus("sending");
+
+  setTimeout(() => {
+    setStatus("done");
+  }, 700);
+}
+---
+
+<section class="card">
+  <h2 class="h2">Nezáväzná cenová ponuka</h2>
+  <p class="text">
+    Vyplňte krátky formulár a my sa vám ozveme s návrhom riešenia a
+    orientačnou cenou. (Demo – bez skutočného odoslania emailu.)
+  </p>
+  <form class="form" on:submit={handleSubmit}>
+    <input class="input" name="name" placeholder="Meno / Firma *" />
+    <input class="input" name="phone" placeholder="Mobil *" />
+    <input class="input" name="email" placeholder="Email *" />
+    <input class="input" name="address" placeholder="Adresa (nepovinné)" />
+    <textarea
+      class="input textarea"
+      name="note"
+      maxlength="160"
+      placeholder="Poznámka (max 160 znakov)"
+    ></textarea>
+
+    <div class="align-right">
+      <button
+        class="btn-cta"
+        type="submit"
+        disabled={status === "sending"}
+      >
+        {status === "sending" ? "Odosielam..." : "Odoslať"}
+      </button>
+    </div>
+
+    {status === "error" && (
+      <p class="info error">Vyplňte prosím povinné polia.</p>
+    )}
+    {status === "done" && (
+      <p class="info success">
+        Ďakujeme, vašu požiadavku sme zaznamenali.
+      </p>
+    )}
+  </form>
+</section>
+
+<style>
+  .card {
+    background:white;
+    border-radius:24px;
+    padding:20px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+    margin-top:24px;
+  }
+  .h2 { font-size:20px; font-weight:700; margin:0 0 6px; }
+  .text { font-size:14px; line-height:1.6; margin:0 0 8px; }
+  .form {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:8px;
+  }
+  .input {
+    border-radius:10px;
+    border:1px solid #CBD5E1;
+    padding:8px 10px;
+    font-size:14px;
+  }
+  .textarea {
+    min-height:80px;
+  }
+  .align-right {
+    text-align:right;
+    margin-top:8px;
+  }
+  .btn-cta {
+    border-radius:999px;
+    border:none;
+    padding:8px 14px;
+    cursor:pointer;
+    background:#111827;
+    color:white;
+    font-size:14px;
+    font-weight:500;
+  }
+  .info {
+    font-size:12px;
+    margin-top:4px;
+  }
+  .error { color:#b91c1c; }
+  .success { color:#16a34a; }
+</style>
+Poznámka: useState v Astro funguje v React integrácii. Ak chceš striktne “čistý” Astro bez Reactu, vieme formulár spraviť ako čisté HTML + action / Netlify / vlastné API. Ale toto sa ti pekne mapuje 1:1 z tvojej React verzie.
+
+9️⃣ PAGES – route súbory
+src/pages/index.astro (Domov)
+
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HeroSection from "../features/home/HeroSection.astro";
+import ServicesPreview from "../features/home/ServicesPreview.astro";
+import MiniPricing from "../features/home/MiniPricing.astro";
+import MiniBlog from "../features/home/MiniBlog.astro";
+import QuoteForm from "../features/shared/QuoteForm.astro";
+---
+
+<BaseLayout
+  title="Sťahovanie Bratislava – byty, domy, firmy"
+  description="Bezstarostné sťahovanie bytov, domov a firiem v Bratislave. VI&MO – balenie, demontáž, prevoz, vypratávanie."
+>
+  <HeroSection />
+  <ServicesPreview />
+  <MiniPricing />
+  <MiniBlog />
+  <QuoteForm />
+</BaseLayout>
+src/features/moving/MovingContent.astro
+
+---
+---
+
+<section class="section-stack">
+  <section>
+    <h1 class="h1">Sťahovanie bytov a rodinných domov</h1>
+    <p class="text">
+      Bezstarostné sťahovanie bytov a domov v Bratislave a okolí. Zabezpečíme
+      demontáž a montáž nábytku, obalenie krehkých vecí, manipuláciu a prevoz.
+      Pracujeme rýchlo, precízne a s dôrazom na ochranu vášho majetku.
+    </p>
+  </section>
+  <section class="card">
+    <h2 class="h2">Zahrnuté služby</h2>
+    <ul class="ul">
+      <li>Balenie a zabezpečenie vecí</li>
+      <li>Prenos a prevoz nábytku a spotrebičov</li>
+      <li>Znesenie a vynesenie aj bez výťahu</li>
+      <li>Poistenie zodpovednosti</li>
+    </ul>
+  </section>
+</section>
+
+<style>
+  .section-stack { display:flex; flex-direction:column; gap:24px; }
+  .card {
+    background:white;
+    border-radius:24px;
+    padding:20px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+  }
+  .h1 { font-size:28px; font-weight:700; margin:0 0 8px; }
+  .h2 { font-size:22px; font-weight:700; margin:0 0 8px; }
+  .text { font-size:14px; line-height:1.6; margin:0 0 8px; }
+  .ul { padding-left:18px; font-size:14px; line-height:1.6; }
+</style>
+src/pages/stahovanie.astro
+
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import MovingContent from "../features/moving/MovingContent.astro";
+import QuoteForm from "../features/shared/QuoteForm.astro";
+---
+
+<BaseLayout
+  title="Sťahovanie bytov a domov Bratislava"
+  description="Profesionálne sťahovanie bytov a rodinných domov v Bratislave s poistením a skúseným tímom."
+  path="/stahovanie"
+>
+  <MovingContent />
+  <QuoteForm />
+</BaseLayout>
+src/features/pricing/PricingContent.astro
+
+---
+const base = {
+  "Garsónka": "od 65 €",
+  "1-izbový byt": "od 70 €",
+  "2-izbový byt": "od 140 €",
+  "3-izbový byt": "od 240 €",
+  "4-izbový byt": "od 350 €",
+  "Rodinný dom": "podľa obhliadky",
+};
+const workers = {
+  "1 pracovník (šofér + sťahovák)": "40 € / hod.",
+  "2 pracovníci": "od 50 € / hod.",
+  "3+ pracovníkov": "dohodou",
+};
+const transport = {
+  "V rámci Bratislavy": "do 30 €",
+  "Mimo mesta": "0,80 €/km",
+  "Minimálny výjazd": "70 €",
+};
+---
+
+<section class="section-stack">
+  <h1 class="h1">Cenník služieb</h1>
+  <p class="text">
+    Ceny sú orientačné. Presnú ponuku pripravíme podľa vašich potrieb,
+    množstva nábytku, poschodia a vzdialenosti.
+  </p>
+
+  <section class="card">
+    <h2 class="h2">Sťahovanie bytov</h2>
+    {Object.entries(base).map(([k, v]) => (
+      <div class="row">
+        <span>{k}</span>
+        <span class="bold">{v}</span>
+      </div>
+    ))}
+  </section>
+
+  <section class="card">
+    <h2 class="h2">Pracovníci</h2>
+    {Object.entries(workers).map(([k, v]) => (
+      <div class="row">
+        <span>{k}</span>
+        <span class="bold">{v}</span>
+      </div>
+    ))}
+  </section>
+
+  <section class="card">
+    <h2 class="h2">Doprava</h2>
+    {Object.entries(transport).map(([k, v]) => (
+      <div class="row">
+        <span>{k}</span>
+        <span class="bold">{v}</span>
+      </div>
+    ))}
+  </section>
+</section>
+
+<style>
+  .section-stack { display:flex; flex-direction:column; gap:24px; }
+  .card {
+    background:white;
+    border-radius:24px;
+    padding:20px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+  }
+  .h1 { font-size:28px; font-weight:700; margin:0 0 8px; }
+  .h2 { font-size:22px; font-weight:700; margin:0 0 8px; }
+  .text { font-size:14px; line-height:1.6; margin:0 0 8px; }
+  .row {
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    padding:3px 0;
+  }
+  .bold { font-weight:600; }
+</style>
+src/pages/cennik.astro
+
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PricingContent from "../features/pricing/PricingContent.astro";
+import QuoteForm from "../features/shared/QuoteForm.astro";
+---
+
+<BaseLayout
+  title="Cenník sťahovania Bratislava"
+  description="Orientačný cenník sťahovania bytov, domov a firiem v Bratislave. Kontaktujte nás pre presnú kalkuláciu."
+  path="/cennik"
+>
+  <PricingContent />
+  <QuoteForm />
+</BaseLayout>
+src/features/contact/ContactInfo.astro
+
+---
+import { siteConfig } from "../../core/siteConfig";
+---
+
+<section class="section-stack">
+  <h1 class="h1">Kontakt</h1>
+  <section class="card">
+    <h2 class="h2">Sťahovanie kontakt</h2>
+    <p class="text">Tel.: {siteConfig.phone}</p>
+    <p class="text">Email: {siteConfig.email}</p>
+    <p class="text">{siteConfig.addressLine}</p>
+    <p class="text">
+      IČO: {siteConfig.ico} • DIČ: {siteConfig.dic}
+    </p>
+  </section>
+</section>
+
+<style>
+  .section-stack { display:flex; flex-direction:column; gap:24px; }
+  .card {
+    background:white;
+    border-radius:24px;
+    padding:20px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+  }
+  .h1 { font-size:28px; font-weight:700; margin:0 0 8px; }
+  .h2 { font-size:20px; font-weight:700; margin:0 0 8px; }
+  .text { font-size:14px; line-height:1.6; margin:0 0 4px; }
+</style>
+src/pages/kontakt.astro
+
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactInfo from "../features/contact/ContactInfo.astro";
+import QuoteForm from "../features/shared/QuoteForm.astro";
+---
+
+<BaseLayout
+  title="Kontakt – VI&MO Sťahovanie Bratislava"
+  description="Kontaktujte VI&MO sťahovanie pre nezáväznú cenovú ponuku sťahovania v Bratislave."
+  path="/kontakt"
+>
+  <ContactInfo />
+  <QuoteForm />
+</BaseLayout>
+src/features/blog/BlogOverview.astro
+
+---
+const posts = [
+  {
+    title: "Ako sa pripraviť na sťahovanie bytu v Bratislave",
+    excerpt:
+      "Začnite plánovať aspoň 1–2 týždne vopred. Pripravte si krabice, ochranné fólie a označte miestnosti...",
+  },
+  {
+    title: "5 tipov, ako znížiť stres pri sťahovaní",
+    excerpt:
+      "Sťahovanie nemusí byť chaos. Pozrite si naše tipy na organizáciu, balenie a komunikáciu s firmou.",
+  },
+];
+---
+
+<section class="section-stack">
+  <h1 class="h1">Blog – tipy na sťahovanie</h1>
+  <p class="text">
+    Praktické rady, ako zvládnuť sťahovanie, vypratávanie aj upratovanie bez chaosu.
+  </p>
+
+  {posts.map((post) => (
+    <article class="card">
+      <h2 class="h2">{post.title}</h2>
+      <p class="text">{post.excerpt}</p>
+      <p class="link-row">
+        <a href="#" class="link">Čítať celý článok (demo)</a>
+      </p>
+    </article>
+  ))}
+</section>
+
+<style>
+  .section-stack { display:flex; flex-direction:column; gap:24px; }
+  .card {
+    background:white;
+    border-radius:24px;
+    padding:20px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+  }
+  .h1 { font-size:28px; font-weight:700; margin:0 0 8px; }
+  .h2 { font-size:22px; font-weight:700; margin:0 0 8px; }
+  .text { font-size:14px; line-height:1.6; margin:0 0 8px; }
+  .link-row { margin-top:4px; }
+  .link {
+    font-size:14px;
+    color:#2563eb;
+    text-decoration:none;
+  }
+</style>
+src/pages/blog.astro
+
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BlogOverview from "../features/blog/BlogOverview.astro";
+---
+
+<BaseLayout
+  title="Blog – tipy na sťahovanie v Bratislave"
+  description="Praktické rady a tipy na sťahovanie bytov, domov a firiem v Bratislave."
+  path="/blog"
+>
+  <BlogOverview />
+</BaseLayout>
+
+🔟 Global styles – src/styles/global.css
+Minimal:
+
+body.app-body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+  background: #f5f7fb;
+  color: #111827;
+}
+
+.app-main {
+  flex: 1;
+  padding: 16px;
+}
+
+.app-container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+A v astro.config.mjs si len nezabudni importnúť global CSS v src/pages/_app ekvivalente, alebo v src/pages/index.astro/layout cez:
+
+---
+// v BaseLayout.astro
+import "../styles/global.css";
+---
+
+Ak chceš, v ďalšom kroku ti z tohto urobím:
+	•	full deploy prompt pre Vercel / VPS (NGINX + build npm run build && npm run preview)
+	•	alebo verziu pre druhú doménu stahovanie-bratislava.info s upravenými SEO textami a canonical tagmi.
+
+Tvoje slová:
+davame to na replit ok ? tak a teraz posledny prompt alebo kod ako hces aby t obolo kompletneeeee
+
+ChatGPT povedal:
+
+Rozmýšľal som 27s
+
+OK, ideme to uzavrieť, nech to na Replite len naklikneš a ide to 🚀
+Spravíme z toho:
+	•	Node/Astro projekt ready pre Replit
+	•	so správnym package.json, astro.config.mjs, tsconfig.json
+	◦	.replit (run command)
+	•	a krátky postup čo kde vložiť
+Nebudem opakovať všetky .astro súbory, ktoré sme už riešili – tu ti dám lepidlo okolo toho, aby sa to celé rozbehlo.
+
+1️⃣ Vytvor Replit projekt
+	1	Na Replit daj Create Repl → Node.js (klasický Node, nie webserver template typu HTML/CSS/JS).
+	2	Pomenuj si ho napr. stahovanie-astro.
+Potom otvor Shell v Replite a zbehni:
+
+npm init -y
+npm install astro@latest typescript
+
+2️⃣ package.json – nahraď celý obsah týmto
+V Replite otvor package.json a prepíš:
+
+{
+  "name": "stahovanie-astro",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0 --port 3000",
+    "build": "astro build",
+    "preview": "astro preview --host 0.0.0.0 --port 3000"
+  },
+  "dependencies": {
+    "astro": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
+Ak ti Replit niečo doplní, nechaj ho, ale skripty dev a preview musia byť presne takto.
+
+3️⃣ astro.config.mjs do rootu
+Vytvor súbor astro.config.mjs:
+
+import { defineConfig } from "astro/config";
+
+export default defineConfig({
+  server: {
+    host: "0.0.0.0",
+    port: 3000,
+  },
+  srcDir: "src",
+  output: "static"
+});
+
+4️⃣ tsconfig.json do rootu
+Vytvor tsconfig.json:
+
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@core/*": ["src/core/*"],
+      "@features/*": ["src/features/*"],
+      "@components/*": ["src/components/*"]
+    }
+  }
+}
+
+5️⃣ .replit – nech Replit vie čo spúšťať
+V root projekte vytvor súbor .replit a daj tam:
+
+run = "npm run dev"
+
+[env]
+PORT = "3000"
+
+[interpreter]
+command = ["node"]
+A ešte replit.nix nechaj tak, ak existuje, alebo ho ignoruj – dôležité je, že run command ide cez npm run dev.
+
+6️⃣ Struktúra src/ – vlož tam naše komponenty
+V Replite si vytvor priečinky/súbory presne:
+
+src/
+  core/
+    siteConfig.ts
+    seo.ts
+  layouts/
+    BaseLayout.astro
+  components/
+    Header.astro
+    Footer.astro
+  features/
+    home/
+      HeroSection.astro
+      ServicesPreview.astro
+      MiniPricing.astro
+      MiniBlog.astro
+    moving/
+      MovingContent.astro
+    pricing/
+      PricingContent.astro
+    contact/
+      ContactInfo.astro
+    blog/
+      BlogOverview.astro
+    shared/
+      QuoteForm.astro
+  pages/
+    index.astro
+    stahovanie.astro
+    cennik.astro
+    kontakt.astro
+    blog.astro
+  styles/
+    global.css
+Do týchto súborov vlož presne kód, čo som ti už poslal v predchádzajúcej správe (celá kostra komponentov).
+Jedinú vec teraz doplním: globálny CSS import do BaseLayout:
+Upravený BaseLayout.astro
+Na začiatku doplň import CSS:
+
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { buildSeo } from "../core/seo";
+import "../styles/global.css";
+
+const {
+  title,
+  description,
+  path = Astro.url.pathname,
+} = Astro.props;
+
+const seo = buildSeo({ title, description, path });
+---
+...
+global.css napr.:
+
+body.app-body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+  background: #f5f7fb;
+  color: #111827;
+}
+
+.app-main {
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.app-container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+7️⃣ Public assets (favicon atď.)
+V priečinku public/ (ak neexistuje, vytvor):
+	•	favicon.ico – môže byť hocičo (Replit default)
+	•	neskôr tam môžeš dať fotky / webp, ale netreba teraz, layout beží aj bez nich.
+
+8️⃣ Spustenie na Replite
+	1	V Shelli:    npm install
+	2	  
+	3	V Replit UI klikni Run.
+Replit ti pustí npm run dev → server na porte 3000 → v prehliadači vpravo uvidíš VI&MO Sťahovanie Astro appku.
+
+9️⃣ “Master prompt” (ak chceš celé generovať cez AI v Replite / Copilotovi)
+Ak chceš, aby ti Copilot / iný AI doplnil všetky súbory automaticky, toto je skrácený master prompt, ktorý môžeš použiť priamo v editore:
+Vytvor v tomto Node projekte kompletnú Astro app pre web „VI&MO Sťahovanie“ podľa tejto štruktúry:
+	•	Použi Astro 4, src/ štruktúru:
+	◦	src/core/siteConfig.ts, src/core/seo.ts – config a SEO helper
+	◦	src/layouts/BaseLayout.astro s <Header /> a <Footer />, importom ../styles/global.css
+	◦	src/components/Header.astro, src/components/Footer.astro
+	◦	src/features/home/{HeroSection,ServicesPreview,MiniPricing,MiniBlog}.astro
+	◦	src/features/moving/MovingContent.astro
+	◦	src/features/pricing/PricingContent.astro
+	◦	src/features/contact/ContactInfo.astro
+	◦	src/features/blog/BlogOverview.astro
+	◦	src/features/shared/QuoteForm.astro – demo formulár (bez reálneho email sendu)
+	◦	src/pages/{index,stahovanie,cennik,kontakt,blog}.astro
+	◦	src/styles/global.css
+Obsah sekcií:
+	•	Domov: hero “Bezstarostné sťahovanie v Bratislave”, preview služieb, mini cenník, mini blog, CTA na cenovú ponuku.
+	•	Sťahovanie: texty o sťahovaní bytov/domov v BA, zoznam zahrnutých služieb, QuoteForm pod tým.
+	•	Cenník: tabuľky s cenami (Garsónka, 1-izbový byt, 2-izbový byt, … pracovníci, doprava).
+	•	Kontakt: firemné údaje VI and MO s.r.o., adresa, IČO, DIČ, tel + email.
+	•	Blog: aspoň 2 články – nadpis + krátky excerpt, link “Čítať celý článok (demo)”.
+Dizajn:
+	•	max-width 1120px, biele card komponenty, border-radius 24px, tieň 0 18px 45px rgba(15,23,42,0.08).
+	•	farby: pozadie #f5f7fb, text #111827, jemné border farby rgba(148,163,184,0.4).
+	•	font: systémový -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif.
+Konfigurácia:
+	•	package.json má skripty:
+	◦	"dev": "astro dev --host 0.0.0.0 --port 3000"
+	◦	"build": "astro build"
+	◦	"preview": "astro preview --host 0.0.0.0 --port 3000"
+	•	astro.config.mjs s server.host = "0.0.0.0" a port = 3000.
+	•	tsconfig.json nech vychádza z astro/tsconfigs/strict.
+Výsledok musí fungovať na Replite tak, že po npm install a npm run dev sa zobrazí plne responzívny landing web s navigáciou, jednotlivými podstránkami a formulárom.
