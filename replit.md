@@ -198,9 +198,16 @@ Preferred communication style: Simple, everyday language.
 ### Blog System with Moderation
 - Author profiles with bio, social links, and avatars
 - Comment system with admin moderation
-- Admin panel at `/admin/comments` with authentication
+- Admin panel at `/admin/comments` with secure authentication
 - Comments require approval before publication
 - Automatic database seeding for demo content
+
+**Admin Security Features:**
+- Rate limiting: 10 requests per 15 minutes per IP
+- Headers-only authentication (no query string exposure)
+- Structured access logging for monitoring
+- Mandatory ADMIN_KEY environment variable
+- Failed access attempt tracking
 
 ### Performance Monitoring
 - Real-time Core Web Vitals tracking

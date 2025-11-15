@@ -1,7 +1,38 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import rateLimit from "express-rate-limit";
 import { storage } from "./storage";
 import { insertBlogPostSchema, insertContactSubmissionSchema, insertAuthorSchema, insertCommentSchema } from "@shared/schema";
+
+// Rate limiting for admin endpoints - prevent brute force attacks
+const adminRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 requests per windowMs
+  message: { error: "Too many admin requests from this IP, please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+  // Skip successful requests from counting against the limit
+  skipSuccessfulRequests: false,
+});
+
+// Admin access logger
+const logAdminAccess = (req: any, success: boolean, reason?: string) => {
+  const timestamp = new Date().toISOString();
+  const ip = req.ip || req.connection.remoteAddress;
+  const adminKey = req.headers['x-admin-key'];
+  const hasKey = !!adminKey;
+  
+  console.log(JSON.stringify({
+    timestamp,
+    type: 'ADMIN_ACCESS',
+    ip,
+    path: req.path,
+    method: req.method,
+    success,
+    hasAdminKey: hasKey,
+    reason: reason || (success ? 'authorized' : 'unauthorized'),
+  }));
+};
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Blog Posts Routes
@@ -86,13 +117,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/comments/pending", async (req, res) => {
+  // ADMIN ENDPOINT: Get pending comments (with rate limiting and logging)
+  app.get("/api/comments/pending", adminRateLimiter, async (req, res) => {
     try {
       // Require ADMIN_KEY environment variable - no defaults for security
       const expectedKey = process.env.ADMIN_KEY;
       
       if (!expectedKey) {
         console.error("ADMIN_KEY environment variable not set");
+        logAdminAccess(req, false, 'server_misconfiguration');
         return res.status(500).json({ error: "Server configuration error: ADMIN_KEY not configured" });
       }
       
@@ -100,8 +133,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const adminKey = req.headers['x-admin-key'] as string | undefined;
       
       if (!adminKey || adminKey !== expectedKey) {
+        logAdminAccess(req, false, !adminKey ? 'missing_key' : 'invalid_key');
         return res.status(403).json({ error: "Unauthorized: Invalid or missing admin key" });
       }
+      
+      // Log successful admin access
+      logAdminAccess(req, true);
       
       const allPendingComments: any[] = [];
       const posts = await storage.getAllBlogPosts();
@@ -143,13 +180,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/comments/:commentId/approve", async (req, res) => {
+  // ADMIN ENDPOINT: Approve comment (with rate limiting and logging)
+  app.patch("/api/comments/:commentId/approve", adminRateLimiter, async (req, res) => {
     try {
       // Require ADMIN_KEY environment variable - no defaults for security
       const expectedKey = process.env.ADMIN_KEY;
       
       if (!expectedKey) {
         console.error("ADMIN_KEY environment variable not set");
+        logAdminAccess(req, false, 'server_misconfiguration');
         return res.status(500).json({ error: "Server configuration error: ADMIN_KEY not configured" });
       }
       
@@ -157,8 +196,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const adminKey = req.headers['x-admin-key'] as string | undefined;
       
       if (!adminKey || adminKey !== expectedKey) {
+        logAdminAccess(req, false, !adminKey ? 'missing_key' : 'invalid_key');
         return res.status(403).json({ error: "Unauthorized: Invalid or missing admin key" });
       }
+      
+      // Log successful admin access
+      logAdminAccess(req, true);
       
       const comment = await storage.approveComment(req.params.commentId);
       if (!comment) {
