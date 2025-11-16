@@ -1,4 +1,5 @@
 import { HeroSection } from "@/components/home/HeroSection";
+import { TrustBar } from "@/components/home/TrustBar";
 import { ServicesPreview } from "@/components/home/ServicesPreview";
 import { MiniPricing } from "@/components/home/MiniPricing";
 import { MiniBlog } from "@/components/home/MiniBlog";
@@ -30,6 +31,11 @@ export default function Home() {
       
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <HeroSection />
+      </div>
+      
+      <TrustBar />
+      
+      <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <ServicesPreview />
         <MiniPricing />
         <MiniBlog />

@@ -26,14 +26,14 @@
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 0%;
   --popover-border: 0 0% 96%;
-  --primary: 142 76% 36%;
+  --primary: 141 67% 53%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 0%;
+  --secondary: 191 100% 13%;
   --secondary-foreground: 0 0% 100%;
   --muted: 0 0% 96.08%;
   --muted-foreground: 0 0% 52.94%;
-  --accent: 254.21 100% 92.55%;
-  --accent-foreground: 0 0% 0%;
+  --accent: 176 100% 27%;
+  --accent-foreground: 0 0% 100%;
   --destructive: 2.04 74.62% 61.37%;
   --destructive-foreground: 0 0% 100%;
   --input: 0 0% 0%;
@@ -110,14 +110,14 @@
   --popover: 0 0% 0%;
   --popover-foreground: 200 6.6667% 91.1765%;
   --popover-border: 0 0% 4%;
-  --primary: 203.7736 87.6033% 52.5490%;
+  --primary: 141 67% 45%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 195.0000 15.3846% 94.9020%;
-  --secondary-foreground: 210 25% 7.8431%;
+  --secondary: 191 100% 20%;
+  --secondary-foreground: 0 0% 100%;
   --muted: 0 0% 9.4118%;
   --muted-foreground: 210 3.3898% 46.2745%;
-  --accent: 205.7143 70% 7.8431%;
-  --accent-foreground: 203.7736 87.6033% 52.5490%;
+  --accent: 176 100% 35%;
+  --accent-foreground: 0 0% 100%;
   --destructive: 356.3033 90.5579% 54.3137%;
   --destructive-foreground: 0 0% 100%;
   --input: 207.6923 27.6596% 18.4314%;
@@ -290,5 +290,32 @@
   .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
     inset: -1px;
+  }
+}
+
+/* Blob animation for hero background */
+@keyframes blob {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1); 
+  }
+  33% { 
+    transform: translate(30px, -50px) scale(1.1); 
+  }
+  66% { 
+    transform: translate(-20px, 20px) scale(0.9); 
+  }
+}
+
+@layer utilities {
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
   }
 }
