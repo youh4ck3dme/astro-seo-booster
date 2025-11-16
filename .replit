@@ -14,14 +14,6 @@ run = ["npm", "run", "start"]
 localPort = 5000
 externalPort = 80
 
-[[ports]]
-localPort = 33881
-externalPort = 3001
-
-[[ports]]
-localPort = 43127
-externalPort = 3000
-
 [env]
 PORT = "5000"
 
@@ -47,4 +39,7 @@ args = "npm run dev"
 waitForPort = 5000
 
 [agent]
-integrations = ["javascript_google_analytics:1.0.0", "javascript_database:1.0.0"]
+integrations = [
+  "javascript_google_analytics:1.0.0",
+  "javascript_database:1.0.0",
+]
