@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { initializeDatabase } from "./db-init";
+import { testConnection } from "./db";
 
 const app = express();
 
@@ -48,8 +49,16 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Initialize database (seed if empty) before registering routes
-  await initializeDatabase();
+  const dbConnected = await testConnection(5, 3000);
+  if (dbConnected) {
+    try {
+      await initializeDatabase();
+    } catch (err) {
+      console.error("⚠️ Database initialization failed, server will start without seeded data:", (err as Error).message);
+    }
+  } else {
+    console.log("⚠️ Database unavailable. Server will start with limited functionality.");
+  }
   
   const server = await registerRoutes(app);
 
