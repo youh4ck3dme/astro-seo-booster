@@ -16,9 +16,18 @@ const adminRateLimiter = rateLimit({
   message: { error: "Too many admin requests from this IP, please try again later." },
   standardHeaders: true,
   legacyHeaders: false,
-  // Skip successful requests from counting against the limit
   skipSuccessfulRequests: false,
 });
+
+// Rate limiting for contact form - prevent spam
+const contactRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // Limit each IP to 5 requests per hour
+  message: { error: "Príliš veľa správ. Skúste to prosím neskôr." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 
 // Admin access logger
 const logAdminAccess = (req: any, success: boolean, reason?: string) => {
@@ -220,13 +229,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Contact Form Route
-  app.post("/api/contact", async (req, res) => {
+  app.post("/api/contact", contactRateLimiter, async (req, res) => {
     try {
+      // Honeypot check for bots
+      if (req.body.website_url) {
+        console.warn("Honeypot triggered - bot submission blocked from IP:", req.ip);
+        return res.status(200).json({ // Return success to bot to avoid retries
+          success: true,
+          message: "Ďakujeme za vašu správu. Ozveme sa vám čoskoro."
+        });
+      }
+
       const validatedSubmission = insertContactSubmissionSchema.parse(req.body);
       const submission = await storage.createContactSubmission(validatedSubmission);
 
-      // In a real app, you would send an email notification here
-      console.log("New contact submission:", {
+      // Send email notifications
+      emailService.sendContactNotification(submission).catch(err =>
+        console.error("Failed to send contact notification email:", err)
+      );
+      emailService.sendConfirmationEmail(submission).catch(err =>
+        console.error("Failed to send confirmation email:", err)
+      );
+
+      console.log("New contact submission with email integration:", {
         name: submission.name,
         email: submission.email,
         phone: submission.phone,
@@ -234,7 +259,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.status(201).json({
         success: true,
-        message: "Ďakujeme za vašu správu. Ozveme sa vám čoskoro."
+        message: "Ďakujeme za vašu správu. Ozveme sa vám čoskoro.",
+        submission
       });
     } catch (error: any) {
       console.error("Error creating contact submission:", error);
@@ -561,32 +587,8 @@ ${posts.map(post => `    <item>
     }
   });
 
-  // Contact Form with Email Integration
-  app.post("/api/contact-with-email", async (req, res) => {
-    try {
-      const validatedSubmission = insertContactSubmissionSchema.parse(req.body);
-      const submission = await storage.createContactSubmission(validatedSubmission);
+  // Redundant endpoint removed - logic merged into /api/contact
 
-      // Send email notifications
-      emailService.sendContactNotification(submission).catch(console.error);
-      emailService.sendConfirmationEmail(submission).catch(console.error);
-
-      console.log("New contact submission with emails:", {
-        name: submission.name,
-        email: submission.email,
-        phone: submission.phone,
-      });
-
-      res.status(201).json({
-        success: true,
-        message: "Ďakujeme za vašu správu. Ozveme sa vám čoskoro.",
-        submission
-      });
-    } catch (error: any) {
-      console.error("Error creating contact submission:", error);
-      res.status(400).json({ error: error.message || "Invalid contact form data" });
-    }
-  });
 
   const httpServer = createServer(app);
   return httpServer;

@@ -211,6 +211,16 @@ export function QuoteForm() {
               )}
             />
 
+            {/* Honeypot field for bot protection */}
+            <div className="hidden" aria-hidden="true">
+              <Input
+                name="website_url"
+                tabIndex={-1}
+                autoComplete="off"
+                placeholder="Leave this empty"
+              />
+            </div>
+
             <div className="flex justify-end">
               <Button
                 type="submit"

@@ -26,18 +26,18 @@ export interface IStorage {
   createComment(comment: InsertComment): Promise<Comment>;
   approveComment(commentId: string): Promise<Comment | undefined>;
   createContactSubmission(submission: InsertContactSubmission): Promise<ContactSubmission>;
-  
+
   // Email Configuration
   getEmailConfig(): Promise<EmailConfig | undefined>;
   updateEmailConfig(config: InsertEmailConfig): Promise<EmailConfig>;
-  
+
   // Email Templates
   getAllEmailTemplates(): Promise<EmailTemplate[]>;
   getEmailTemplateByKey(key: string): Promise<EmailTemplate | undefined>;
   createEmailTemplate(template: InsertEmailTemplate): Promise<EmailTemplate>;
   updateEmailTemplate(id: string, template: Partial<InsertEmailTemplate>): Promise<EmailTemplate | undefined>;
   deleteEmailTemplate(id: string): Promise<boolean>;
-  
+
   // Email Logs
   getAllEmailLogs(): Promise<EmailLog[]>;
   createEmailLog(log: InsertEmailLog): Promise<EmailLog>;
@@ -60,15 +60,15 @@ const STORAGE_KEYS = {
 // Default email configuration
 const defaultEmailConfig: EmailConfig = {
   id: 'default-config',
-  smtpHost: 'smtp.gmail.com',
-  smtpPort: 587,
-  smtpUser: '',
-  smtpPassword: '',
-  fromEmail: 'info@viamo.sk',
+  smtpHost: 'smtp.m1.websupport.sk',
+  smtpPort: 465,
+  smtpUser: 'info@viandmo.com',
+  smtpPassword: 'Heslo#Veslo1',
+  fromEmail: 'info@viandmo.com',
   fromName: 'VI&MO Sťahovanie',
-  replyTo: 'info@viamo.sk',
+  replyTo: 'info@viandmo.com',
   bcc: '',
-  enabled: false,
+  enabled: true,
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -1190,6 +1190,10 @@ export class LocalStorageBackend implements IStorage {
 
     if (!initialized) {
       console.log('🔄 Initializing localStorage with seed data...');
+
+      // Seed default email config
+      this.storage.setItem(STORAGE_KEYS.EMAIL_CONFIG, JSON.stringify(defaultEmailConfig));
+      this.storage.setItem(STORAGE_KEYS.EMAIL_TEMPLATES, JSON.stringify(defaultEmailTemplates));
 
       // Seed authors
       this.storage.setItem(STORAGE_KEYS.AUTHORS, JSON.stringify(fallbackAuthors));
