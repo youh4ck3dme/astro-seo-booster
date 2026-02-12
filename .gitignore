@@ -43,3 +43,4 @@ node_modules_old/
 node_modules.bak/
 /public/google2e037b48f21a0d2d.html
 .vercel
+.env*.local
