@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bratislava-stahovanie.viandmo.com/sitemap-index.xml

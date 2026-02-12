@@ -1,0 +1,148 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { buildSeo } from "../core/seo";
+import StructuredData from "../components/StructuredData.astro";
+import { siteConfig } from "../core/siteConfig";
+import "../styles/global.css";
+
+const {
+  title,
+  description,
+  path = Astro.url.pathname,
+} = Astro.props;
+
+const seo = buildSeo({ title, description, path });
+const GA_ID = "G-YYBL6G3GLJ";
+---
+
+<html lang="sk">
+  <head>
+    <meta charset="utf-8" />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="canonical" href={seo.url} />
+
+    <link rel="icon" href="/favicon.ico" />
+
+    {/* Preconnect to Google Fonts */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={seo.url} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:image" content={`${siteConfig.baseUrl}/assets/hero.png`} />
+
+    {/* Twitter Cards */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+    <meta name="twitter:image" content={`${siteConfig.baseUrl}/assets/hero.png`} />
+
+    <meta name="robots" content="index,follow" />
+    <meta name="keywords" content={siteConfig.keywords} />
+
+
+    {/* PWA Meta Tags */}
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#111827" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="VI&MO Sťahovanie" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+
+    {/* === CRITICAL HERO CSS === */}
+    <style is:inline>
+      .hero {
+        display: block;
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+      .hero-grid {
+        display: grid;
+        gap: 24px;
+        align-items: center;
+      }
+      @media (min-width: 900px) {
+        .hero-grid {
+          grid-template-columns: 1.2fr 1fr;
+        }
+      }
+      .h1 {
+        font-size: clamp(32px, 5vw, 48px);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 16px;
+        color: #111827;
+      }
+      .hero-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 16px;
+      }
+    </style>
+
+    {/* 🔥 PATCH #2 – Non-blocking CSS */}
+    <link
+      rel="preload"
+      href="/src/styles/global.css"
+      as="style"
+      onload="this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="/src/styles/global.css" />
+    </noscript>
+
+    {/* 🔥 PATCH #3 – Lazy-loading gtag */}
+    <script define:vars={{ GA_ID }}>
+      window.addEventListener('load', () => {
+        const s = document.createElement('script');
+        s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+        s.async = true;
+        document.head.appendChild(s);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', GA_ID);
+      });
+    </script>
+    <StructuredData />
+  </head>
+  <body class="app-body">
+    <Header />
+    <main class="app-main">
+      <div class="app-container">
+        <slot />
+      </div>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --primary: #111827;
+  }
+  .app-body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #f8fafc;
+  }
+  .app-main {
+    padding: 24px 16px;
+  }
+  .app-container {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+</style>

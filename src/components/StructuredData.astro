@@ -1,0 +1,65 @@
+---
+import { siteConfig } from "../core/siteConfig";
+
+const businessSchema = {
+  "@context": "https://schema.org",
+  "@type": "MovingCompany",
+  "name": siteConfig.name,
+  "url": siteConfig.baseUrl,
+  "logo": `${siteConfig.baseUrl}/icons/icon-512x512.png`,
+  "image": `${siteConfig.baseUrl}/assets/hero.png`,
+  "description": siteConfig.description,
+  "telephone": siteConfig.phone,
+  "email": siteConfig.email,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": siteConfig.addressLine,
+    "addressLocality": siteConfig.city,
+    "postalCode": siteConfig.postalCode,
+    "addressCountry": "SK"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "48.2046",
+    "longitude": "17.1518"
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
+    "opens": "00:00",
+    "closes": "23:59"
+  },
+  "sameAs": [
+    siteConfig.social.facebook,
+    siteConfig.social.instagram
+  ],
+  "areaServed": {
+    "@type": "City",
+    "name": "Bratislava"
+  },
+  "priceRange": "$$"
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": siteConfig.name,
+  "url": siteConfig.baseUrl,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": `${siteConfig.baseUrl}/search?q={search_term_string}`,
+    "query-input": "required name=search_term_string"
+  }
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />

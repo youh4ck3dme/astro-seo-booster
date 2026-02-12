@@ -6,34 +6,42 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { HelmetProvider } from "react-helmet-async";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import Home from "@/pages/Home";
-import Services from "@/pages/Services";
-import Pricing from "@/pages/Pricing";
-import Contact from "@/pages/Contact";
-import Blog from "@/pages/Blog";
-import BlogPost from "@/pages/BlogPost";
-import Dashboard from "@/pages/Dashboard";
-import AdminComments from "@/pages/AdminComments";
-import NotFound from "@/pages/not-found";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { initGA, initWebVitals } from "@/lib/analytics";
 import { useAnalytics } from "@/hooks/use-analytics";
+
+// Lazy load pages for performance
+const Home = lazy(() => import("@/pages/Home"));
+const Services = lazy(() => import("@/pages/Services"));
+const Pricing = lazy(() => import("@/pages/Pricing"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const Blog = lazy(() => import("@/pages/Blog"));
+const BlogPost = lazy(() => import("@/pages/BlogPost"));
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const AdminComments = lazy(() => import("@/pages/AdminComments"));
+const NotFound = lazy(() => import("@/pages/not-found"));
 
 function Router() {
   useAnalytics();
 
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/stahovanie" component={Services} />
-      <Route path="/cennik" component={Pricing} />
-      <Route path="/kontakt" component={Contact} />
-      <Route path="/blog" component={Blog} />
-      <Route path="/blog/:slug" component={BlogPost} />
-      <Route path="/admin/dashboard" component={Dashboard} />
-      <Route path="/admin/comments" component={AdminComments} />
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    }>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/stahovanie" component={Services} />
+        <Route path="/cennik" component={Pricing} />
+        <Route path="/kontakt" component={Contact} />
+        <Route path="/blog" component={Blog} />
+        <Route path="/blog/:slug" component={BlogPost} />
+        <Route path="/admin/dashboard" component={Dashboard} />
+        <Route path="/admin/comments" component={AdminComments} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 

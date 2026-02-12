@@ -1,0 +1,77 @@
+---
+const stats = [
+  {
+    icon: "📈",
+    value: "2500+",
+    label: "Úspešných sťahovaní",
+  },
+  {
+    icon: "⭐",
+    value: "4.9/5",
+    label: "Hodnotenie Google",
+  },
+  {
+    icon: "📅",
+    value: "15",
+    label: "Rokov skúseností",
+  },
+  {
+    icon: "🛡️",
+    value: "100%",
+    label: "Poistenie zodpovednosti",
+  }
+];
+---
+
+<section class="trust-bar">
+  <div class="container">
+    <div class="stats-grid">
+      {stats.map((stat) => (
+        <div class="stat-item">
+          <div class="stat-icon">{stat.icon}</div>
+          <div class="stat-value">{stat.value}</div>
+          <div class="stat-label">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust-bar {
+    padding: 32px 0;
+    background: linear-gradient(90deg, #111827 0%, #065f46 50%, #111827 100%);
+    color: white;
+  }
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    text-align: center;
+  }
+  @media (min-width: 768px) {
+    .stats-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .stat-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    opacity: 0.9;
+  }
+  .stat-value {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0.9;
+  }
+</style>

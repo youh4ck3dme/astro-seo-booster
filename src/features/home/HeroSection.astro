@@ -1,0 +1,110 @@
+---
+import { Image } from "astro:assets";
+// Assuming hero.png is available in src/assets/
+import hero from "../../assets/hero.png";
+---
+
+<section class="card hero">
+  <div class="hero-grid">
+    <div>
+      <h1 class="h1">Bezstarostné sťahovanie v Bratislave</h1>
+      <p class="text">
+        Presťahujeme vás rýchlo, bezpečne a férovo – byty, domy, kancelárie, sklady.
+        Zabezpečíme balenie, demontáž, prevoz aj vypratávanie nepotrebných vecí.
+      </p>
+      <div class="hero-actions">
+        <a href="/kontakt" class="btn-cta">Nezáväzná cenová ponuka</a>
+        <a href="/cennik" class="btn-secondary">Pozrieť cenník</a>
+      </div>
+      <p class="muted">
+        ✅ Poistenie zodpovednosti • Skúsený tím • Férové ceny
+      </p>
+    </div>
+    <div class="hero-illu">
+       {/* 🔥 PATCH #1 – Astro Image Pipeline (LCP) */}
+       <div class="image-wrapper">
+         <Image
+           src={hero}
+           alt="Sťahovanie Bratislava – Viandmo"
+           width={1280}
+           height={720}
+           format="webp"
+           loading="eager"
+           decoding="async"
+           fetchpriority="high"
+           class="hero-img"
+         />
+       </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .card {
+    background: white;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 18px 45px rgba(15,23,42,0.08);
+  }
+  .hero-grid {
+    display: grid;
+    gap: 24px;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .hero-grid {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+  .h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: #111827;
+  }
+  .text {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #4b5563;
+    margin-bottom: 24px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .btn-cta {
+    background: #111827;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .btn-secondary {
+    background: white;
+    color: #111827;
+    padding: 12px 24px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    border: 1px solid #e5e7eb;
+  }
+  .muted {
+    font-size: 14px;
+    color: #9ca3af;
+  }
+  .image-wrapper {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  }
+  .hero-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+</style>

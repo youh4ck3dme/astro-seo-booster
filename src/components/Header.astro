@@ -1,0 +1,67 @@
+---
+import { siteConfig } from "../core/siteConfig";
+---
+
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <span class="logo-icon">🚚</span>
+      <span class="logo-text">{siteConfig.name}</span>
+    </a>
+
+    <nav class="nav">
+      <a href="/" class="nav-link">Domov</a>
+      <a href="/stahovanie" class="nav-link">Sťahovanie</a>
+      <a href="/cennik" class="nav-link">Cenník</a>
+      <a href="/blog" class="nav-link">Blog</a>
+      <a href="/kontakt" class="nav-link">Kontakt</a>
+      <a href="/kontakt" class="btn-cta">Nezáväzná ponuka</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .header-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #111827;
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+  .nav {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .nav-link {
+    text-decoration: none;
+    color: #4b5563;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  .btn-cta {
+    background: #111827;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.875rem;
+  }
+</style>

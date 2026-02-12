@@ -9,6 +9,17 @@ interface SEOHeadProps {
 export function SEOHead({ seo, structuredData }: SEOHeadProps) {
   return (
     <Helmet>
+      {/* LCP performance patch */}
+      <link
+        rel="preload"
+        as="image"
+        href="/images/hero.png"
+        fetchPriority="high"
+      />
+
+      {/* Font preload */}
+      <link rel="preload" href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+      
       {/* Primary Meta Tags */}
       <title>{seo.title}</title>
       <meta name="title" content={seo.title} />

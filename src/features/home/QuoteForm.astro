@@ -1,0 +1,252 @@
+---
+---
+
+<section class="quote-section" id="kontakt">
+  <div class="container">
+    <div class="quote-card" id="quote-form-container">
+      <div class="card-header">
+        <h2 class="title">Nezáväzná cenová ponuka</h2>
+        <p class="subtitle">Vyplňte krátky formulár a my sa vám ozveme s návrhom riešenia a orientačnou cenou.</p>
+      </div>
+
+      <div class="card-content">
+        <form id="quote-form" class="quote-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name">Meno / Firma *</label>
+              <input type="text" id="name" name="name" required placeholder="Vaše meno alebo názov firmy" />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Telefón *</label>
+              <input type="tel" id="phone" name="phone" required placeholder="+421 xxx xxx xxx" />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" required placeholder="vas@email.sk" />
+            </div>
+
+            <div class="form-group">
+              <label for="apartmentSize">Veľkosť bytu/domu</label>
+              <input type="text" id="apartmentSize" name="apartmentSize" placeholder="napr. 2-izbový byt" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="moveDate">Preferovaný termín sťahovania</label>
+            <input type="text" id="moveDate" name="moveDate" placeholder="napr. 15.3.2024 alebo začiatok apríla" />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Poznámka *</label>
+            <textarea id="message" name="message" required placeholder="Popíšte, čo potrebujete presťahovať, z akého poschodia, či je výťah, atď."></textarea>
+          </div>
+
+          <!-- Honeypot -->
+          <div style="display:none">
+            <input type="text" name="website_url" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-submit" id="submit-btn">
+              Odoslať požiadavku
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Success Message (Hidden by default) -->
+    <div class="quote-card success-card" id="success-msg" style="display:none">
+      <div class="card-content success-content">
+        <div class="success-icon">✅</div>
+        <h3 class="success-title">Ďakujeme za vašu požiadavku!</h3>
+        <p class="success-desc">Ozveme sa vám čo najskôr s presnou cenovou ponukou.</p>
+        <button type="button" class="btn-outline" id="reset-btn">Odoslať ďalšiu požiadavku</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('quote-form') as HTMLFormElement;
+  const formContainer = document.getElementById('quote-form-container');
+  const successMsg = document.getElementById('success-msg');
+  const submitBtn = document.getElementById('submit-btn');
+  const resetBtn = document.getElementById('reset-btn');
+
+  if (form && formContainer && successMsg && submitBtn && resetBtn) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      // Basic validation
+      if (!data.name || !data.email || !data.phone || !data.message) {
+        alert('Prosím vyplňte všetky povinné polia.');
+        return;
+      }
+
+      submitBtn.textContent = 'Odosielam...';
+      (submitBtn as HTMLButtonElement).disabled = true;
+
+      try {
+        // In a real app, this would be an actual API call
+        // For now, we simulate a delay and show success
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        formContainer.style.display = 'none';
+        successMsg.style.display = 'block';
+        form.reset();
+      } catch (error) {
+        alert('Chyba pri odosielaní. Skúste to prosím znova.');
+      } finally {
+        submitBtn.textContent = 'Odoslať požiadavku';
+        (submitBtn as HTMLButtonElement).disabled = false;
+      }
+    });
+
+    resetBtn.addEventListener('click', () => {
+      successMsg.style.display = 'none';
+      formContainer.style.display = 'block';
+    });
+  }
+</script>
+
+<style>
+  .quote-section {
+    padding: 64px 0;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  .quote-card {
+    background: white;
+    border-radius: 32px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 48px 48px 24px;
+    text-align: center;
+  }
+  .title {
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 800;
+    background: linear-gradient(90deg, #111827 0%, #065f46 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .subtitle {
+    font-size: 18px;
+    color: #64748b;
+  }
+  .card-content {
+    padding: 0 48px 48px;
+  }
+  .quote-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+  }
+  input, textarea {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    font-size: 16px;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #065f46;
+    box-shadow: 0 0 0 4px rgba(6, 95, 70, 0.1);
+    background: white;
+  }
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+  .btn-submit {
+    padding: 16px 40px;
+    background: linear-gradient(90deg, #111827 0%, #065f46 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(6, 95, 70, 0.3);
+  }
+  .btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .success-card {
+    text-align: center;
+    padding: 64px 32px;
+  }
+  .success-icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+  }
+  .success-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .success-desc {
+    color: #64748b;
+    margin-bottom: 32px;
+  }
+  .btn-outline {
+    padding: 12px 24px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    color: #111827;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-outline:hover {
+    background: #f8fafc;
+  }
+  @media (max-width: 640px) {
+    .card-header, .card-content {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  }
+</style>
