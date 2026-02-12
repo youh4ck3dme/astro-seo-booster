@@ -29,7 +29,7 @@ const GA_ID = "G-YYBL6G3GLJ";
     {/* Preconnect to Google Fonts */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" fetchpriority="high" />
 
     <meta property="og:title" content={seo.title} />
     <meta property="og:description" content={seo.description} />
@@ -94,6 +94,7 @@ const GA_ID = "G-YYBL6G3GLJ";
       href="/src/styles/global.css"
       as="style"
       onload="this.rel='stylesheet'"
+      fetchpriority="high"
     />
     <noscript>
       <link rel="stylesheet" href="/src/styles/global.css" />
@@ -114,13 +115,15 @@ const GA_ID = "G-YYBL6G3GLJ";
       });
     </script>
     <StructuredData />
-    <script type="speculationrules">
-      {
-        "prefetch": [
-          { "source": "list", "urls": ["/kontakt", "/cennik", "/blog"] }
-        ]
-      }
-    </script>
+    {Astro.url.pathname === "/" && (
+      <script type="speculationrules">
+        {
+          "prefetch": [
+            { "source": "list", "urls": ["/kontakt", "/cennik", "/blog"] }
+          ]
+        }
+      </script>
+    )}
   </head>
   <body class="app-body">
     <Header />
