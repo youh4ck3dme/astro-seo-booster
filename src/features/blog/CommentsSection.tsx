@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MessageSquare, User, Calendar } from "lucide-react";
+import { MessageSquare, Calendar } from "lucide-react";
 
 interface Comment {
     id: number;

@@ -24,6 +24,7 @@ const GA_ID = "G-YYBL6G3GLJ";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="google-site-verification" content="google2e037b48f21a0d2d" />
     <link rel="canonical" href={seo.url} />
+    <meta name="generator" content={Astro.generator} />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
@@ -71,10 +72,13 @@ const GA_ID = "G-YYBL6G3GLJ";
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     {/* === CRITICAL HERO CSS === */}
     <style is:inline>
-      .hero {
-        display: block;
-        max-width: 1120px;
-        margin: 0 auto;
+      /* Critical Hero CSS to prevent CLS */
+      .hero-wrapper {
+        padding-bottom: 4rem;
+        padding-top: 2rem;
+        overflow: hidden;
+        position: relative;
+        background-color: white;
       }
       .hero-grid {
         display: grid;
@@ -84,6 +88,10 @@ const GA_ID = "G-YYBL6G3GLJ";
       @media (min-width: 900px) {
         .hero-grid {
           grid-template-columns: 1.2fr 1fr;
+        }
+        .hero-wrapper {
+          padding-bottom: 6rem;
+          padding-top: 3rem;
         }
       }
       .h1 {
@@ -98,6 +106,8 @@ const GA_ID = "G-YYBL6G3GLJ";
         height: auto;
         display: block;
         border-radius: 16px;
+        aspect-ratio: 4/5;
+        object-fit: cover;
       }
     </style>
 
@@ -117,10 +127,13 @@ const GA_ID = "G-YYBL6G3GLJ";
     </script>
     <StructuredData />
     {Astro.url.pathname === "/" && (
-      <script type="speculationrules">
+      <script type="speculationrules" is:inline>
         {
           "prefetch": [
             { "source": "list", "urls": ["/kontakt", "/cennik", "/blog"] }
+          ],
+          "prerender": [
+             { "source": "list", "urls": ["/kontakt", "/cennik"] }
           ]
         }
       </script>

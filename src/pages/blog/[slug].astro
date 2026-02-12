@@ -4,13 +4,19 @@ import { siteConfig } from "../../core/siteConfig";
 import { CommentsSection } from "../../features/blog/CommentsSection";
 
 export async function getStaticPaths() {
-  const response = await fetch(`${siteConfig.baseUrl}/api/blog/posts`);
-  const posts = await response.json();
-  
-  return posts.map((post: any) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
+  try {
+    const response = await fetch(`${siteConfig.baseUrl}/api/blog/posts`);
+    if (!response.ok) throw new Error(`Failed to fetch posts: ${response.statusText}`);
+    const posts = await response.json();
+    
+    return posts.map((post: any) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
+  } catch (error) {
+    console.warn("⚠️ Could not fetch blog posts during build. Skipping blog page generation.", error);
+    return [];
+  }
 }
 
 const { post } = Astro.props;
@@ -138,7 +144,7 @@ const formatDate = (dateString: string) => {
 
       {/* Comments Section */}
       <div class="comments-wrapper mt-24">
-        <CommentsSection client:load postId={post.id} />
+        <CommentsSection client:visible postId={post.id} />
       </div>
 
       {/* CTA Box */}

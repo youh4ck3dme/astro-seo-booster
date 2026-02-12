@@ -9,8 +9,6 @@ import GallerySection from "../features/home/GallerySection.astro";
 import ProcessSection from "../features/home/ProcessSection.astro";
 import ReviewsSection from "../features/home/ReviewsSection.astro";
 import QuoteForm from "../features/home/QuoteForm.astro";
-
-// Other components will be added later
 ---
 
 <BaseLayout
@@ -26,6 +24,6 @@ import QuoteForm from "../features/home/QuoteForm.astro";
   <ReviewsSection />
   <GallerySection />
   <div class="py-12 md:py-16">
-    <QuoteForm />
+    <QuoteForm client:visible />
   </div>
 </BaseLayout>
