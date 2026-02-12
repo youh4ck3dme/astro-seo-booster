@@ -4,11 +4,11 @@
 
 /* LIGHT MODE */
 :root {
-  --button-outline: rgba(0,0,0, .10);
-  --badge-outline: rgba(0,0,0, .05);
+  --button-outline: rgba(0, 0, 0, .10);
+  --badge-outline: rgba(0, 0, 0, .05);
   --opaque-button-border-intensity: -8;
-  --elevate-1: rgba(0,0,0, .03);
-  --elevate-2: rgba(0,0,0, .08);
+  --elevate-1: rgba(0, 0, 0, .03);
+  --elevate-2: rgba(0, 0, 0, .08);
   --background: 0 0% 100%;
   --foreground: 0 0% 0%;
   --border: 0 0% 96.47%;
@@ -58,7 +58,7 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
-/* Fallback for older browsers */
+  /* Fallback for older browsers */
   --sidebar-primary-border: hsl(var(--sidebar-primary));
   --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 
@@ -88,11 +88,11 @@
 }
 
 .dark {
-  --button-outline: rgba(255,255,255, .10);
-  --badge-outline: rgba(255,255,255, .05);
+  --button-outline: rgba(255, 255, 255, .10);
+  --badge-outline: rgba(255, 255, 255, .05);
   --opaque-button-border-intensity: 9;
-  --elevate-1: rgba(255,255,255, .04);
-  --elevate-2: rgba(255,255,255, .09);
+  --elevate-1: rgba(255, 255, 255, .04);
+  --elevate-2: rgba(255, 255, 255, .09);
   --background: 0 0% 0%;
   --foreground: 200 6.6667% 91.1765%;
   --border: 210 5.2632% 14.9020%;
@@ -136,7 +136,7 @@
   --shadow-xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
   --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
 
-/* Fallback for older browsers */
+  /* Fallback for older browsers */
   --sidebar-primary-border: hsl(var(--sidebar-primary));
   --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 
@@ -172,12 +172,20 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     @apply border-border;
   }
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    background-image:
+      radial-gradient(at 0% 0%, hsla(141, 67%, 53%, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(191, 100%, 13%, 0.05) 0px, transparent 50%);
+    background-attachment: fixed;
   }
 }
 
@@ -206,6 +214,58 @@
   /* Hide ugly search cancel button in Chrome until we can style it properly */
   input[type="search"]::-webkit-search-cancel-button {
     @apply hidden;
+  }
+
+  .glass-card {
+    @apply bg-background/60 backdrop-blur-xl border border-white/10 shadow-2xl;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    pointer-events: none;
+  }
+
+  .glass-saturate {
+    backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  .animate-in-fade {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  .animate-in-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .text-glow {
+    text-shadow: 0 0 20px hsla(141, 67%, 53%, 0.3);
   }
 
   /* Placeholder styling for contentEditable div */
@@ -295,14 +355,18 @@
 
 /* Blob animation for hero background */
 @keyframes blob {
-  0%, 100% { 
-    transform: translate(0, 0) scale(1); 
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
   }
-  33% { 
-    transform: translate(30px, -50px) scale(1.1); 
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
   }
-  66% { 
-    transform: translate(-20px, 20px) scale(0.9); 
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
   }
 }
 

@@ -80,18 +80,18 @@ export function QuoteForm() {
   }
 
   return (
-    <Card data-testid="card-quote-form">
-      <CardHeader>
-        <CardTitle className="font-serif text-2xl md:text-3xl">
+    <Card className="glass-card animate-in-slide-up [animation-delay:400ms] border-0" data-testid="card-quote-form">
+      <CardHeader className="relative z-10">
+        <CardTitle className="font-serif text-3xl md:text-4xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
           Nezáväzná cenová ponuka
         </CardTitle>
-        <CardDescription className="text-base">
+        <CardDescription className="text-lg">
           Vyplňte krátky formulár a my sa vám ozveme s návrhom riešenia a
           orientačnou cenou.
         </CardDescription>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="relative z-10">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -104,6 +104,7 @@ export function QuoteForm() {
                     <FormControl>
                       <Input
                         placeholder="Vaše meno alebo názov firmy"
+                        className="bg-white/50 backdrop-blur-sm border-white/20 focus:ring-primary/30 transition-all"
                         {...field}
                         data-testid="input-name"
                       />
@@ -123,6 +124,7 @@ export function QuoteForm() {
                       <Input
                         placeholder="+421 xxx xxx xxx"
                         type="tel"
+                        className="bg-white/50 backdrop-blur-sm border-white/20 focus:ring-primary/30 transition-all"
                         {...field}
                         data-testid="input-phone"
                       />
@@ -144,6 +146,7 @@ export function QuoteForm() {
                       <Input
                         placeholder="vas@email.sk"
                         type="email"
+                        className="bg-white/50 backdrop-blur-sm border-white/20 focus:ring-primary/30 transition-all"
                         {...field}
                         data-testid="input-email"
                       />
@@ -162,6 +165,7 @@ export function QuoteForm() {
                     <FormControl>
                       <Input
                         placeholder="napr. 2-izbový byt"
+                        className="bg-white/50 backdrop-blur-sm border-white/20 focus:ring-primary/30 transition-all"
                         {...field}
                         value={field.value ?? ""}
                         data-testid="input-apartment-size"
@@ -182,6 +186,7 @@ export function QuoteForm() {
                   <FormControl>
                     <Input
                       placeholder="napr. 15.3.2024 alebo začiatok apríla"
+                      className="bg-white/50 backdrop-blur-sm border-white/20 focus:ring-primary/30 transition-all"
                       {...field}
                       value={field.value ?? ""}
                       data-testid="input-move-date"
@@ -201,7 +206,7 @@ export function QuoteForm() {
                   <FormControl>
                     <Textarea
                       placeholder="Popíšte, čo potrebujete presťahovať, z akého poschodia, či je výťah, atď."
-                      className="min-h-[120px] resize-none"
+                      className="min-h-[120px] bg-white/50 backdrop-blur-sm border-white/20 focus:ring-primary/30 transition-all resize-none"
                       {...field}
                       data-testid="input-message"
                     />
@@ -221,15 +226,16 @@ export function QuoteForm() {
               />
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-4">
               <Button
                 type="submit"
                 size="lg"
                 disabled={submitMutation.isPending}
+                className="h-14 px-10 text-lg bg-gradient-to-r from-primary to-accent hover:shadow-[0_0_20px_rgba(46,204,113,0.4)] transition-all hover:scale-105 active:scale-95"
                 data-testid="button-submit-quote"
               >
                 {submitMutation.isPending && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 )}
                 {submitMutation.isPending ? "Odosielam..." : "Odoslať požiadavku"}
               </Button>
