@@ -1,0 +1,30 @@
+{
+  "name": "VI&MO - Sťahovacia Firma Bratislava",
+  "short_name": "VI&MO",
+  "description": "Profesionálna sťahovacia firma v Bratislave a okolí. Rýchle a bezpečné sťahovanie bytov, domov a kancelárií.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2ECC71",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "business",
+    "utilities"
+  ],
+  "lang": "sk-SK",
+  "dir": "ltr"
+}

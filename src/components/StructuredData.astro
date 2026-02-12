@@ -6,7 +6,7 @@ const businessSchema = {
   "@type": "MovingCompany",
   "name": siteConfig.name,
   "url": siteConfig.baseUrl,
-  "logo": `${siteConfig.baseUrl}/icons/icon-512x512.png`,
+  "logo": `${siteConfig.baseUrl}/assets/logo-dark.svg`,
   "image": `${siteConfig.baseUrl}/assets/hero.png`,
   "description": siteConfig.description,
   "telephone": siteConfig.phone,
@@ -39,7 +39,8 @@ const businessSchema = {
   },
   "sameAs": [
     siteConfig.social.facebook,
-    siteConfig.social.instagram
+    siteConfig.social.instagram,
+    siteConfig.social.gallery
   ],
   "areaServed": {
     "@type": "City",

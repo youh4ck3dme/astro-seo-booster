@@ -32,5 +32,19 @@ Vysoko výkonná landing page pre sťahovaciu firmu v Bratislave, migrovaná z R
 - `src/pages/`: Jednotlivé podstránky (Sťahovanie, Cenník, Blog, Kontakt).
 - `public/`: Statické assety, manifest, ikony a PWA skripty.
 
+## 📊 Benchmarking & Performance
+Lighthouse skóre sa môže líšiť v závislosti od zaťaženia CPU a siete. Pre objektívne meranie použite tento skript:
+
+```powershell
+# Spustí 5 auditov a vypočíta priemerné skóre
+for ($i=1; $i -le 5; $i++) {
+  npx -y lighthouse http://localhost:4321 --only-categories=performance --output=json --output-path=.\lh_$i.json --quiet
+}
+1..5 | ForEach-Object {
+  $r = Get-Content -Raw "lh_$_.json" | ConvertFrom-Json
+  "{0}: {1}" -f $_, [math]::Round($r.categories.performance.score*100,0)
+}
+```
+
 ## 📜 Licencia
 Všetky práva vyhradené © 2024 VI&MO Sťahovanie.

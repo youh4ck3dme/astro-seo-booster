@@ -1,48 +1,84 @@
 ---
-const blogPreviews = [
+const { hideHeader = false } = Astro.props;
+import { siteConfig } from "../../core/siteConfig";
+
+// Default static content from the original project
+const defaultPosts = [
   {
     title: "Ako sa pripraviť na sťahovanie bytu v Bratislave",
     excerpt: "Komplexný sprievodca prípravou na sťahovanie - od plánovania až po vybalenie na novom mieste.",
     category: "Tipy",
     date: "15. 11. 2024",
-    readingTime: "5 min"
+    readingTime: "5 min",
+    slug: ""
   },
   {
     title: "5 tipov, ako znížiť stres pri sťahovaní",
     excerpt: "Overené rady, ktoré vám pomôžu prežiť sťahovanie bez zbytočného stresu a komplikácií.",
     category: "Rady",
     date: "10. 11. 2024",
-    readingTime: "4 min"
+    readingTime: "4 min",
+    slug: ""
   },
   {
     title: "Vypratávanie bytu – praktický checklist",
     excerpt: "Krok za krokom sprievodca vypratávaním bytu s kontrolným zoznamom pre efektívnu prácu.",
     category: "Návody",
     date: "5. 11. 2024",
-    readingTime: "6 min"
+    readingTime: "6 min",
+    slug: ""
   },
 ];
+
+let blogPreviews = defaultPosts;
+
+try {
+  const response = await fetch(`${siteConfig.baseUrl}/api/blog/posts`);
+  if (response.ok) {
+    const posts = await response.json();
+    if (posts && posts.length > 0) {
+      blogPreviews = posts.slice(0, 3).map((post: any) => ({
+        title: post.title,
+        excerpt: post.excerpt,
+        category: post.category,
+        date: new Date(post.publishedAt).toLocaleDateString('sk-SK'),
+        readingTime: `${post.readingTime} min`,
+        slug: post.slug,
+        image: post.featuredImage || "/assets/hero.png"
+      }));
+    }
+  }
+} catch (error) {
+  console.error("Failed to fetch blog posts for MiniBlog:", error);
+}
 ---
 
 <section class="mini-blog">
   <div class="container">
-    <div class="header">
-      <h2 class="title">Užitočné články</h2>
-      <p class="subtitle">Tipy a rady pre bezproblémové sťahovanie</p>
-    </div>
+    {!hideHeader && (
+      <div class="header">
+        <h2 class="title" style="font-family: 'Nunito Sans', sans-serif;">Užitočné články</h2>
+        <p class="subtitle">Tipy a rady pre bezproblémové sťahovanie</p>
+      </div>
+    )}
 
     <div class="blog-grid">
       {blogPreviews.map((post) => (
-        <a href="/blog" class="blog-card">
+        <a href={post.slug ? `/blog/${post.slug}` : "/blog"} class="blog-card">
           <div class="card-line"></div>
+          {post.image && (
+            <div class="card-image-wrapper">
+              <img src={post.image} alt={post.title} class="card-image" loading="lazy" />
+            </div>
+          )}
           <div class="card-content">
             <span class="category-badge">{post.category}</span>
-            <h3 class="post-title">{post.title}</h3>
+            <h3 class="post-title" style="font-family: 'Nunito Sans', sans-serif;">{post.title}</h3>
             <p class="post-excerpt">{post.excerpt}</p>
             
             <div class="post-meta">
               <span class="meta-item">📅 {post.date}</span>
-              <span class="meta-item">⏱️ {post.readingTime} čítania</span>
+              <span class="meta-item">⏱️ {post.readingTime} {post.slug ? "" : "čítania"}</span>
             </div>
           </div>
           <div class="card-footer">

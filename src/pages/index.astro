@@ -1,9 +1,13 @@
+---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroSection from "../features/home/HeroSection.astro";
 import TrustBar from "../features/home/TrustBar.astro";
 import ServicesPreview from "../features/home/ServicesPreview.astro";
 import MiniPricing from "../features/home/MiniPricing.astro";
 import MiniBlog from "../features/home/MiniBlog.astro";
+import GallerySection from "../features/home/GallerySection.astro";
+import ProcessSection from "../features/home/ProcessSection.astro";
+import ReviewsSection from "../features/home/ReviewsSection.astro";
 import QuoteForm from "../features/home/QuoteForm.astro";
 
 // Other components will be added later
@@ -11,12 +15,17 @@ import QuoteForm from "../features/home/QuoteForm.astro";
 
 <BaseLayout
   title="Sťahovanie Bratislava – byty, domy, firmy"
-  description="Bezstarostné sťahovanie bytov, domov a firiem v Bratislave. VI&MO – balenie, demontáž, prevoz, vypratávanie."
+  description="Bezstarostné sťahovanie bytov, domov a firiem v Bratislave. VI&MO – balenie, demontáž, prevoz, vypratávanie. Poistenie zodpovednosti, skúsený tím, férové ceny."
 >
   <HeroSection />
   <TrustBar />
   <ServicesPreview />
   <MiniPricing />
   <MiniBlog />
-  <QuoteForm />
+  <ProcessSection />
+  <ReviewsSection />
+  <GallerySection />
+  <div class="py-12 md:py-16">
+    <QuoteForm />
+  </div>
 </BaseLayout>

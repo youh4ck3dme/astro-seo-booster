@@ -14,7 +14,7 @@ const navLinks = [
   <div class="container">
     <div class="header-inner">
       <a href="/" class="logo">
-        <span class="logo-icon">🚚</span>
+        <img src="/assets/logo-dark.svg" alt="VI&MO Logo" class="logo-img" />
         <span class="logo-text">{siteConfig.name}</span>
       </a>
 
@@ -22,12 +22,21 @@ const navLinks = [
         {navLinks.map((link) => (
           <a href={link.href} class="nav-link">{link.label}</a>
         ))}
-        <a href="/kontakt" class="btn-primary">Nezáväzná ponuka</a>
+        <a href="/#galeria" class="nav-link">Galéria</a>
+        <div class="header-cta flex items-center gap-4 ml-4">
+          <a href={`tel:${siteConfig.phone.replace(/\s/g, '')}`} class="phone-link flex items-center gap-2 font-bold text-gray-900 underline decoration-primary decoration-2 underline-offset-4">
+            <span class="icon">📞</span> {siteConfig.phone}
+          </a>
+          <a href="/kontakt" class="btn-primary">Nezáväzná ponuka</a>
+        </div>
       </nav>
 
-      <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Menu">
-        <span class="menu-icon">☰</span>
-      </button>
+      <div class="header-right flex items-center gap-4 md:hidden">
+        <a href={`tel:${siteConfig.phone.replace(/\s/g, '')}`} class="phone-icon text-2xl">📞</a>
+        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Menu">
+          <span class="menu-icon">☰</span>
+        </button>
+      </div>
     </div>
 
     <nav id="mobile-nav" class="mobile-nav">
@@ -78,8 +87,9 @@ const navLinks = [
     text-decoration: none;
     color: #111827;
   }
-  .logo-icon {
-    font-size: 24px;
+  .logo-img {
+    height: 32px;
+    width: auto;
   }
   .logo-text {
     font-size: 20px;

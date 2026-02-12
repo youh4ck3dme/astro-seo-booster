@@ -1,19 +1,156 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ServicesPreview from "../features/home/ServicesPreview.astro";
+import QuoteForm from "../features/home/QuoteForm.astro";
+
+const seo = {
+  title: "Sťahovanie bytov a domov Bratislava | VI&MO",
+  description: "Profesionálne sťahovanie bytov a rodinných domov v Bratislave s poistením a skúseným tímom. Balenie, demontáž, prevoz, montáž nábytku."
+};
+
+const includedServices = [
+  "Balenie a zabezpečenie vecí",
+  "Prenos a prevoz nábytku a spotrebičov",
+  "Demontáž a montáž nábytku",
+  "Znesenie a vynesenie aj bez výťahu",
+  "Poistenie zodpovednosti",
+  "Ochrana podláh a stien",
+];
+
+const processSteps = [
+  {
+    step: "1",
+    title: "Nezáväzná kalkulácia",
+    desc: "Kontaktujte nás a popíšte, čo potrebujete. Pripravíme vám orientačnú cenu."
+  },
+  {
+    step: "2",
+    title: "Obhliadka a presná cena",
+    desc: "Ak chcete, prídeme sa pozrieť na miesto a určíme presnú cenu."
+  },
+  {
+    step: "3",
+    title: "Termín sťahovania",
+    desc: "Dohodneme sa na termíne, ktorý vám vyhovuje."
+  },
+  {
+    step: "4",
+    title: "Realizácia",
+    desc: "Príde náš tím, zabezpečí balenie, demontáž, prevoz a montáž na novom mieste."
+  },
+];
 ---
 
-<BaseLayout 
-  title="Sťahovacie služby Bratislava | Viandmo"
-  description="Kompletné sťahovacie služby v Bratislave a okolí. Sťahovanie bytov, domov, firiem, kancelárií, balenie a vypratávanie."
->
-  <div class="py-12 md:py-20">
-    <div class="container mx-auto max-w-7xl px-4">
-      <h1 class="text-4xl font-bold text-center mb-8">Naše služby</h1>
-      <p class="text-center text-gray-600 mb-12">
-        Ponúkame profesionálne sťahovanie a doplnkové služby pre váš maximálny komfort.
-      </p>
-      <ServicesPreview />
+<BaseLayout {...seo}>
+  <div class="services-subpage py-12 md:py-20">
+    <div class="container mx-auto max-w-4xl px-4">
+      <div class="header-section mb-16">
+        <h1 class="font-black text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-6 leading-tight" style="font-family: 'Nunito Sans', sans-serif;">
+          Sťahovanie bytov a rodinných domov
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-600 leading-relaxed">
+          Bezstarostné sťahovanie bytov a domov v Bratislave a okolí. Zabezpečíme
+          demontáž a montáž nábytku, obalenie krehkých vecí, manipuláciu a prevoz.
+          Pracujeme rýchlo, precízne a s dôrazom na ochranu vášho majetku.
+        </p>
+      </div>
+
+      <div class="content-sections space-y-12">
+        {/* Included Services Section */}
+        <section class="info-card">
+          <h2 class="section-title">Zahrnuté služby</h2>
+          <ul class="services-list grid grid-cols-1 md:grid-cols-2 gap-4">
+            {includedServices.map((service) => (
+              <li class="service-item">
+                <span class="icon">✅</span>
+                <span class="text">{service}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Process Steps Section */}
+        <section class="info-card">
+          <h2 class="section-title">Ako to prebieha</h2>
+          <div class="process-steps space-y-8">
+            {processSteps.map((item) => (
+              <div class="process-step">
+                <div class="step-number">{item.step}</div>
+                <div class="step-content">
+                  <h3 class="step-title">{item.title}</h3>
+                  <p class="step-desc text-gray-600">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Form CTA */}
+        <div class="form-wrapper pt-8">
+          <QuoteForm />
+        </div>
+      </div>
     </div>
   </div>
 </BaseLayout>
+
+<style>
+  .services-subpage {
+    background: #ffffff;
+  }
+  .section-title {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: #111827;
+    font-family: 'Nunito Sans', sans-serif;
+  }
+  .info-card {
+    background: #f8fafc;
+    border-radius: 32px;
+    padding: 40px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .services-list {
+    list-style: none;
+    padding: 0;
+  }
+  .service-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 17px;
+    color: #334155;
+    font-weight: 500;
+  }
+  .icon {
+    font-size: 20px;
+  }
+  .process-step {
+    display: flex;
+    gap: 20px;
+  }
+  .step-number {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    background: #111827;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 18px;
+  }
+  .step-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: #111827;
+  }
+  .step-desc {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+</style>

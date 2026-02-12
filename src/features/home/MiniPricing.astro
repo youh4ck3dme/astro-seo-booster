@@ -1,4 +1,6 @@
 ---
+const { hideHeader = false } = Astro.props;
+
 const pricingData = [
   { type: "Garsónka", price: "65", size: "do 25m²" },
   { type: "1-izbový byt", price: "70", size: "25-35m²", popular: false },
@@ -11,10 +13,12 @@ const pricingData = [
 
 <section class="mini-pricing">
   <div class="container">
-    <div class="header">
-      <h2 class="title">Transparentný cenník</h2>
-      <p class="subtitle">Férové ceny bez skrytých poplatkov. Presnú ponuku pripravíme po obhliadke.</p>
-    </div>
+    {!hideHeader && (
+      <div class="header">
+        <h2 class="title">Transparentný cenník</h2>
+        <p class="subtitle">Férové ceny bez skrytých poplatkov. Presnú ponuku pripravíme po obhliadke.</p>
+      </div>
+    )}
 
     <div class="pricing-grid">
       {pricingData.map((item) => (

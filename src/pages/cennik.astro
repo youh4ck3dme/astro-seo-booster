@@ -1,19 +1,150 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import MiniPricing from "../features/home/MiniPricing.astro";
+import QuoteForm from "../features/home/QuoteForm.astro";
+
+const seo = {
+  title: "Cenník sťahovania Bratislava | VI&MO",
+  description: "Orientačný cenník sťahovania bytov, domov a firiem v Bratislave. Kontaktujte nás pre presnú kalkuláciu podľa vašich potrieb."
+};
+
+const apartmentPricing = [
+  { type: "Garsónka", price: "od 65 €" },
+  { type: "1-izbový byt", price: "od 70 €" },
+  { type: "2-izbový byt", price: "od 140 €" },
+  { type: "3-izbový byt", price: "od 240 €" },
+  { type: "4-izbový byt", price: "od 350 €" },
+  { type: "Rodinný dom", price: "podľa obhliadky" },
+];
+
+const workersPricing = [
+  { type: "1 pracovník (šofér + sťahovák)", price: "40 € / hod." },
+  { type: "2 pracovníci", price: "od 50 € / hod." },
+  { type: "3+ pracovníkov", price: "dohodou" },
+];
+
+const transportPricing = [
+  { type: "V rámci Bratislavy", price: "do 30 €" },
+  { type: "Mimo mesta", price: "0,80 €/km" },
+  { type: "Minimálny výjazd", price: "70 €" },
+];
 ---
 
-<BaseLayout 
-  title="Cenník sťahovania – Bratislava | Viandmo"
-  description="Transparentný cenník sťahovacích služieb v Bratislave. Ceny za sťahovanie bytov, domov a firiem bez skrytých poplatkov."
->
-  <div class="py-12 md:py-20">
-    <div class="container mx-auto max-w-7xl px-4">
-      <h1 class="text-4xl font-bold text-center mb-8">Cenník služieb</h1>
-      <p class="text-center text-gray-600 mb-12">
-        Orientačné ceny našich služieb. Pre presnú kalkuláciu nás neváhajte kontaktovať.
-      </p>
-      <MiniPricing />
+<BaseLayout {...seo}>
+  <div class="pricing-subpage py-12 md:py-20">
+    <div class="container mx-auto max-w-4xl px-4">
+      <div class="header-section mb-16">
+        <h1 class="font-black text-4xl md:text-5xl lg:text-6xl text-gray-900 mb-6 leading-tight" style="font-family: 'Nunito Sans', sans-serif;">
+          Cenník služieb
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-600 leading-relaxed">
+          Ceny sú orientačné. Presnú ponuku pripravíme podľa vašich potrieb,
+          množstva nábytku, poschodia a vzdialenosti.
+        </p>
+      </div>
+
+      <div class="pricing-sections space-y-12">
+        {/* Apartment Pricing */}
+        <section class="pricing-card">
+          <h2 class="card-title">Sťahovanie bytov</h2>
+          <div class="pricing-table">
+            {apartmentPricing.map(item => (
+              <div class="pricing-row">
+                <span class="type">{item.type}</span>
+                <span class="price">{item.price}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Workers Pricing */}
+        <section class="pricing-card">
+          <h2 class="card-title">Pracovníci</h2>
+          <div class="pricing-table">
+            {workersPricing.map(item => (
+              <div class="pricing-row">
+                <span class="type">{item.type}</span>
+                <span class="price">{item.price}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Transport Pricing */}
+        <section class="pricing-card">
+          <h2 class="card-title">Doprava</h2>
+          <div class="pricing-table">
+            {transportPricing.map(item => (
+              <div class="pricing-row">
+                <span class="type">{item.type}</span>
+                <span class="price">{item.price}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Note Card */}
+        <div class="note-card">
+          <p class="text-sm text-gray-600">
+            <strong>Poznámka:</strong> Finálna cena závisí od konkrétnych podmienok sťahovania.
+            Pre presnú kalkuláciu nás prosím kontaktujte alebo vyplňte formulár nižšie.
+          </p>
+        </div>
+
+        {/* Quote Form */}
+        <div class="form-wrapper pt-8">
+          <QuoteForm />
+        </div>
+      </div>
     </div>
   </div>
 </BaseLayout>
+
+<style>
+  .pricing-subpage {
+    background: #ffffff;
+  }
+  .pricing-card {
+    background: #f8fafc;
+    border-radius: 32px;
+    padding: 40px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  .card-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: #111827;
+    font-family: 'Nunito Sans', sans-serif;
+  }
+  .pricing-table {
+    display: flex;
+    flex-direction: column;
+  }
+  .pricing-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .pricing-row:last-child {
+    border-bottom: none;
+  }
+  .type {
+    font-size: 16px;
+    color: #334155;
+    font-weight: 500;
+  }
+  .price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+  }
+  .note-card {
+    background: #f1f5f9;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+  }
+</style>

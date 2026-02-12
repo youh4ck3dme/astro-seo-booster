@@ -1,19 +1,194 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import MiniBlog from "../features/home/MiniBlog.astro";
+import { siteConfig } from "../core/siteConfig";
+
+const seo = {
+  title: "Blog – tipy na sťahovanie v Bratislave | VI&MO",
+  description: "Praktické rady a tipy na sťahovanie bytov, domov a firiem v Bratislave. Návody, checklisty a odporúčania od profesionálov."
+};
+
+let posts = [];
+let error = null;
+
+try {
+  const response = await fetch(`${siteConfig.baseUrl}/api/blog/posts`);
+  if (response.ok) {
+    posts = await response.json();
+  } else {
+    error = "Nepodarilo sa načítať články.";
+  }
+} catch (e) {
+  console.error("Error fetching posts:", e);
+  error = "Chyba pri pripájaní k serveru.";
+}
 ---
 
-<BaseLayout 
-  title="Blog o sťahovaní – Rady a tipy | Viandmo"
-  description="Čítajte naše články o sťahovaní v Bratislave. Užitočné rady, checklisty a návody ako sa presťahovať bez stresu."
->
-  <div class="py-12 md:py-20">
-    <div class="container mx-auto max-w-7xl px-4">
-      <h1 class="text-4xl font-bold text-center mb-8">Blog o sťahovaní</h1>
-      <p class="text-center text-gray-600 mb-12">
-        Pripravili sme pre vás sériu článkov s užitočnými informáciami a tipmi.
-      </p>
-      <MiniBlog />
+<BaseLayout {...seo}>
+  <div class="blog-page py-12 md:py-20">
+    <div class="container mx-auto max-w-7xl px-4 md:px-6">
+      <div class="space-y-12">
+        {/* Header */}
+        <div class="text-center max-w-3xl mx-auto space-y-4">
+          <h1 class="font-black text-4xl md:text-5xl font-bold text-gray-900 leading-tight" style="font-family: 'Nunito Sans', sans-serif;">
+            Blog – tipy na sťahovanie
+          </h1>
+          <p class="text-xl text-gray-600">
+            Praktické rady, ako zvládnuť sťahovanie, vypratávanie aj upratovanie bez chaosu.
+          </p>
+        </div>
+
+        {/* Blog Posts Grid */}
+        {error ? (
+          <div class="error-msg p-8 text-center bg-red-50 text-red-600 rounded-2xl border border-red-100 italic">
+            {error}
+          </div>
+        ) : posts.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post: any) => (
+              <a href={`/blog/${post.slug}`} class="blog-card-link group">
+                <article class="blog-card">
+                  {post.featuredImage && (
+                    <div class="card-image-wrapper">
+                      <img 
+                        src={post.featuredImage} 
+                        alt={post.title}
+                        class="card-image"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  
+                  <div class="card-content">
+                    <div class="card-meta">
+                      <span class="category-badge">{post.category}</span>
+                      <span class="meta-info">
+                        ⏱️ {post.readingTime} min
+                      </span>
+                    </div>
+                    
+                    <h2 class="post-title" style="font-family: 'Nunito Sans', sans-serif;">
+                      {post.title}
+                    </h2>
+                    
+                    <p class="post-excerpt">
+                      {post.excerpt}
+                    </p>
+                    
+                    <div class="card-footer">
+                      <span class="read-more">Čítať článok →</span>
+                    </div>
+                  </div>
+                </article>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="empty-msg p-16 text-center bg-gray-50 text-gray-500 rounded-3xl border border-dashed border-gray-200">
+            Momentálne nemáme žiadne publikované články. Vráťte sa čoskoro!
+          </div>
+        )}
+      </div>
     </div>
   </div>
 </BaseLayout>
+
+<style>
+  .blog-page {
+    background: #ffffff;
+  }
+  .blog-card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .blog-card {
+    height: 100%;
+    background: white;
+    border-radius: 24px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: rgba(79, 70, 229, 0.2);
+  }
+  .card-image-wrapper {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-cover: cover;
+    transition: transform 0.5s ease;
+  }
+  .blog-card:hover .card-image {
+    transform: scale(1.05);
+  }
+  .card-content {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .category-badge {
+    padding: 4px 12px;
+    background: rgba(79, 70, 229, 0.1);
+    color: #4f46e5;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .meta-info {
+    font-size: 13px;
+    color: #94a3b8;
+    font-weight: 500;
+  }
+  .post-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: #1e293b;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .post-excerpt {
+    font-size: 15px;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-footer {
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+  }
+  .read-more {
+    font-weight: 700;
+    color: #4f46e5;
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+  .blog-card:hover .read-more {
+    padding-left: 4px;
+  }
+</style>

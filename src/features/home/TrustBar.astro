@@ -23,24 +23,28 @@ const stats = [
 ];
 ---
 
-<section class="trust-bar">
-  <div class="container">
-    <div class="stats-grid">
-      {stats.map((stat) => (
-        <div class="stat-item">
-          <div class="stat-icon">{stat.icon}</div>
-          <div class="stat-value">{stat.value}</div>
-          <div class="stat-label">{stat.label}</div>
-        </div>
-      ))}
+<section class="trust-bar relative overflow-hidden py-12">
+  <!-- Subtle pattern background -->
+  <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+  
+  <div class="container relative z-10">
+    <div class="glass-saturate rounded-[2.5rem] bg-white/5 border border-white/10 p-8 md:p-12">
+      <div class="stats-grid">
+        {stats.map((stat) => (
+          <div class="stat-item group hover:scale-105 transition-transform duration-300 cursor-default">
+            <div class="stat-icon mb-4 transform group-hover:rotate-12 transition-transform">{stat.icon}</div>
+            <div class="stat-value text-glow">{stat.value}</div>
+            <div class="stat-label uppercase tracking-widest">{stat.label}</div>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 </section>
 
 <style>
   .trust-bar {
-    padding: 32px 0;
-    background: linear-gradient(90deg, #111827 0%, #065f46 50%, #111827 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #064e3b 50%, #0f172a 100%);
     color: white;
   }
   .container {
@@ -51,7 +55,7 @@ const stats = [
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    gap: 32px;
     text-align: center;
   }
   @media (min-width: 768px) {
@@ -60,18 +64,18 @@ const stats = [
     }
   }
   .stat-icon {
-    font-size: 32px;
-    margin-bottom: 12px;
-    opacity: 0.9;
+    font-size: 40px;
+    line-height: 1;
   }
   .stat-value {
-    font-size: clamp(24px, 4vw, 36px);
-    font-weight: 700;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 900;
     margin-bottom: 4px;
+    letter-spacing: -0.02em;
   }
   .stat-label {
-    font-size: 14px;
-    font-weight: 500;
-    opacity: 0.9;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.7;
   }
 </style>

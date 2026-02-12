@@ -1,0 +1,192 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { siteConfig } from "../../core/siteConfig";
+import { CommentsSection } from "../../features/blog/CommentsSection";
+
+export async function getStaticPaths() {
+  const response = await fetch(`${siteConfig.baseUrl}/api/blog/posts`);
+  const posts = await response.json();
+  
+  return posts.map((post: any) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+
+// Fetch all posts again to find related ones (in a real app we might pass this via props)
+const allPostsResponse = await fetch(`${siteConfig.baseUrl}/api/blog/posts`);
+const allPosts = await allPostsResponse.json();
+
+const relatedPosts = allPosts
+  .filter((p: any) => p.id !== post.id && p.category === post.category)
+  .slice(0, 3);
+
+const seo = {
+  title: `${post.title} | Blog VI&MO`,
+  description: post.metaDescription || post.excerpt,
+};
+
+// Simple date formatter
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('sk-SK', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+---
+
+<BaseLayout {...seo}>
+  <article class="blog-post-detail py-12 md:py-20">
+    <div class="container mx-auto max-w-4xl px-4">
+      {/* Breadcrumbs */}
+      <nav class="breadcrumb mb-8 text-sm text-gray-500">
+        <a href="/" class="hover:text-primary">Domov</a>
+        <span class="mx-2">/</span>
+        <a href="/blog" class="hover:text-primary">Blog</a>
+        <span class="mx-2">/</span>
+        <span class="text-gray-900 font-medium truncate inline-block max-w-[200px] align-bottom">{post.title}</span>
+      </nav>
+
+      {/* Hero Section */}
+      <header class="post-header mb-12">
+        <div class="flex flex-wrap items-center gap-4 mb-6">
+          <span class="category-badge">{post.category}</span>
+          <div class="meta-info flex items-center gap-4 text-gray-500 text-sm">
+            <span>📅 {formatDate(post.publishedAt)}</span>
+            <span>⏱️ {post.readingTime} min čítania</span>
+          </div>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-8 leading-tight" style="font-family: 'Nunito Sans', sans-serif;">
+          {post.title}
+        </h1>
+
+        {post.featuredImage && (
+          <div class="featured-image-wrapper mb-12 rounded-3xl overflow-hidden shadow-2xl">
+            <img 
+              src={post.featuredImage} 
+              alt={post.title}
+              class="w-full h-auto"
+            />
+          </div>
+        )}
+
+        <p class="text-xl md:text-2xl text-gray-600 leading-relaxed italic border-l-4 border-primary pl-6">
+          {post.excerpt}
+        </p>
+      </header>
+
+      {/* Content */}
+      <div class="prose-container">
+        <div class="prose prose-lg prose-slate max-w-none 
+          prose-headings:font-black prose-headings:text-gray-900 
+          prose-h2:text-3xl prose-h2:mt-16 prose-h2:mb-6
+          prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-8
+          prose-ul:text-gray-700 prose-ul:my-8
+          prose-strong:text-gray-900 prose-strong:font-bold
+          prose-img:rounded-3xl prose-img:shadow-lg
+          prose-a:text-primary prose-a:font-bold prose-a:no-underline hover:prose-a:underline"
+        >
+          {/* Use set:html for content. In production, sanitize or use markdown component if storing as MD */}
+          <div set:html={post.content.replace(/\n/g, '<br />').replace(/^# (.*$)/gm, '<h2 class="text-3xl font-black mb-6 mt-12">$1</h2>').replace(/^## (.*$)/gm, '<h3 class="text-2xl font-bold mb-4 mt-8">$1</h3>')} />
+        </div>
+      </div>
+
+      {/* Author & Tags */}
+      <footer class="post-footer mt-16 pt-12 border-t border-gray-100">
+        <div class="flex flex-wrap items-center justify-between gap-8">
+          <div class="author-info flex items-center gap-4">
+            <div class="author-avatar w-12 h-12 bg-gray-100 border border-gray-200 rounded-full flex items-center justify-center text-xl">
+              👤
+            </div>
+            <div>
+              <span class="block text-sm text-gray-500 font-bold uppercase tracking-wider">Autor</span>
+              <span class="text-gray-900 font-bold">{post.authorName || 'Redakcia VI&MO'}</span>
+            </div>
+          </div>
+
+          {post.tags && post.tags.length > 0 && (
+            <div class="tags-list flex flex-wrap gap-2">
+              {post.tags.map((tag: string) => (
+                <span class="tag">#{tag}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      </footer>
+
+      {/* Related Posts */}
+      {relatedPosts.length > 0 && (
+        <section class="related-posts mt-24">
+          <h2 class="text-3xl font-black mb-12 text-center" style="font-family: 'Nunito Sans', sans-serif;">Súvisiace články</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {relatedPosts.map((related: any) => (
+              <a href={`/blog/${related.slug}`} class="related-card group">
+                <div class="card-content">
+                  <span class="category-badge text-[10px] py-1 px-3 mb-4 inline-block">{related.category}</span>
+                  <h3 class="font-bold text-gray-900 group-hover:text-primary transition-colors line-clamp-2 mb-2">{related.title}</h3>
+                  <p class="text-sm text-gray-500 line-clamp-2">{related.excerpt}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Comments Section */}
+      <div class="comments-wrapper mt-24">
+        <CommentsSection client:load postId={post.id} />
+      </div>
+
+      {/* CTA Box */}
+      <div class="cta-box mt-24 p-8 md:p-12 bg-primary/5 border border-primary/10 rounded-3xl text-center">
+        <h3 class="text-2xl md:text-3xl font-black mb-4 text-gray-900" style="font-family: 'Nunito Sans', sans-serif;">Potrebujete pomoc so sťahovaním?</h3>
+        <p class="text-lg text-gray-600 mb-8 max-w-xl mx-auto">Sme vám k dispozícii 7 dní v týždni. Pripravíme vám nezáväznú kalkuláciu presne na mieru.</p>
+        <a href="/kontakt" class="btn-primary inline-block px-10 py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30 hover:transform hover:-translate-y-1 transition-all">
+          Získať cenovú ponuku
+        </a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .category-badge {
+    padding: 6px 16px;
+    background: rgba(79, 70, 229, 0.1);
+    color: #4f46e5;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .tag {
+    font-size: 14px;
+    color: #4f46e5;
+    background: #f8fafc;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+  .related-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  .related-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+  .featured-image-wrapper img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+  }
+</style>
