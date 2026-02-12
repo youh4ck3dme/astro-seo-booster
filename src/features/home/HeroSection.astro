@@ -1,66 +1,46 @@
 ---
-import { Image } from "astro:assets";
-import hero from "../../assets/hero.png";
 ---
 
 <section class="relative bg-white pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden">
-  <div class="container mx-auto px-4 max-w-7xl">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+  <div class="container mx-auto px-4 max-w-4xl text-center">
+    
+    <!-- Text Content -->
+    <div class="flex flex-col items-center z-10">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+        Sťahovanie <span class="text-primary">Bratislava</span> <br />
+        a okolie
+      </h1>
       
-      <!-- Text Content -->
-      <div class="flex flex-col items-start text-left z-10">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-          Sťahovanie <span class="text-primary">Bratislava</span> <br />
-          a okolie
-        </h1>
-        
-        <p class="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed max-w-lg">
-          Profesionálne sťahovanie bytov, domov a firiem. Bezpečne, rýchlo a za fér ceny. Nechajte ťažkú prácu na nás.
-        </p>
+      <p class="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto">
+        Profesionálne sťahovanie bytov, domov a firiem. Bezpečne, rýchlo a za fér ceny. Nechajte ťažkú prácu na nás.
+      </p>
 
-        <div class="flex flex-wrap gap-4 mb-10">
-          <a href="/kontakt" class="btn-primary">
-            Nezáväzná ponuka
-          </a>
-          <a href="/cennik" class="btn-secondary">
-            Pozrieť cenník
-          </a>
-        </div>
-
-        <!-- Simple Trust Indicators -->
-        <div class="flex items-center gap-6 text-sm font-medium text-gray-500">
-          <div class="flex items-center gap-2">
-            <span class="text-yellow-400 text-lg">★</span>
-            <span>4.9/5 Hodnotenie</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-primary text-lg">✓</span>
-            <span>15+ rokov praxe</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-primary text-lg">🛡️</span>
-            <span>Poistenie</span>
-          </div>
-        </div>
+      <div class="flex flex-wrap justify-center gap-4 mb-10">
+        <a href="/kontakt" class="btn-primary">
+          Nezáväzná ponuka
+        </a>
+        <a href="/cennik" class="btn-secondary">
+          Pozrieť cenník
+        </a>
       </div>
 
-      <!-- Hero Image -->
-      <div class="relative z-10">
-        <Image
-          src={hero}
-          alt="Sťahovanie Bratislava – Viandmo"
-          widths={[640, 960, 1280]}
-          sizes="(max-width: 900px) 100vw, 50vw"
-          format="webp"
-          loading="eager"
-          fetchpriority="high"
-          class="w-full h-auto rounded-2xl shadow-xl object-cover aspect-[4/3]"
-        />
-        <!-- Subtle back decorative element (optional, can remove if user wants 100% plain) -->
-        <div class="absolute -bottom-4 -right-4 w-full h-full bg-gray-100 rounded-2xl -z-10"></div>
+      <!-- Simple Trust Indicators -->
+      <div class="flex flex-wrap justify-center items-center gap-6 text-sm font-medium text-gray-500">
+        <div class="flex items-center gap-2">
+          <span class="text-yellow-400 text-lg">★</span>
+          <span>4.9/5 Hodnotenie</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-primary text-lg">✓</span>
+          <span>15+ rokov praxe</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-primary text-lg">🛡️</span>
+          <span>Poistenie</span>
+        </div>
       </div>
-
     </div>
+
   </div>
 </section>
 
