@@ -8,8 +8,8 @@ import { CheckCircle2 } from "lucide-react";
 
 export default function Services() {
   const seo = buildSeo({
-    title: "Sťahovanie bytov a domov Bratislava",
-    description: "Profesionálne sťahovanie bytov a rodinných domov v Bratislave s poistením a skúseným tímom. Balenie, demontáž, prevoz, montáž nábytku.",
+    title: "Sťahovanie bytov a domov Bratislava | Bezpečný prevoz VI&MO",
+    description: "Profesionálne sťahovanie bytov a rodinných domov v Bratislave. Od balenia nábytku až po jeho montáž na novej adrese. Sme poistení a skúsení. Volajte!",
     path: "/stahovanie",
   });
 
@@ -35,7 +35,7 @@ export default function Services() {
   return (
     <>
       <SEOHead seo={seo} structuredData={[serviceSchema, breadcrumbs]} />
-      
+
       <div className="container mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16">
         <div className="space-y-12">
           {/* Main Content */}
@@ -43,7 +43,7 @@ export default function Services() {
             <h1 className="font-serif text-4xl md:text-5xl font-bold">
               Sťahovanie bytov a rodinných domov
             </h1>
-            
+
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl">
               Bezstarostné sťahovanie bytov a domov v Bratislave a okolí. Zabezpečíme
               demontáž a montáž nábytku, obalenie krehkých vecí, manipuláciu a prevoz.
@@ -61,8 +61,8 @@ export default function Services() {
             <CardContent>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {includedServices.map((service, index) => (
-                  <li 
-                    key={index} 
+                  <li
+                    key={index}
                     className="flex items-start gap-3"
                     data-testid={`service-item-${index}`}
                   >
@@ -105,8 +105,8 @@ export default function Services() {
                     desc: "Príde náš tím, zabezpečí balenie, demontáž, prevoz a montáž na novom mieste."
                   },
                 ].map((item) => (
-                  <div 
-                    key={item.step} 
+                  <div
+                    key={item.step}
                     className="flex gap-4"
                     data-testid={`process-step-${item.step}`}
                   >

@@ -116,6 +116,54 @@ export type SiteConfig = {
   dic: string;
 };
 
+// Email Configuration Schema
+export type EmailConfig = {
+  id: string;
+  smtpHost: string;
+  smtpPort: number;
+  smtpUser: string;
+  smtpPassword: string;
+  fromEmail: string;
+  fromName: string;
+  replyTo: string;
+  bcc: string;
+  enabled: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type InsertEmailConfig = Omit<EmailConfig, "id" | "createdAt" | "updatedAt">;
+
+// Email Template Schema
+export type EmailTemplate = {
+  id: string;
+  name: string;
+  key: string;
+  subject: string;
+  htmlContent: string;
+  textContent: string;
+  isDefault: boolean;
+  enabled: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type InsertEmailTemplate = Omit<EmailTemplate, "id" | "createdAt" | "updatedAt">;
+
+// Email Log Schema
+export type EmailLog = {
+  id: string;
+  templateKey: string;
+  toEmail: string;
+  subject: string;
+  status: "sent" | "failed" | "pending";
+  error: string | null;
+  sentAt: Date | null;
+  createdAt: Date;
+};
+
+export type InsertEmailLog = Omit<EmailLog, "id" | "createdAt">;
+
 // SEO metadata type
 export type SEOData = {
   title: string;

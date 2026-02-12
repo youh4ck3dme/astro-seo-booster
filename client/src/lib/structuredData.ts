@@ -23,12 +23,36 @@ export function getLocalBusinessSchema() {
       "latitude": "48.1858",
       "longitude": "17.1067"
     },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "08:00",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Saturday"],
+        "opens": "09:00",
+        "closes": "14:00"
+      }
+    ],
     "priceRange": "€€",
     "areaServed": {
       "@type": "City",
       "name": "Bratislava"
     },
-    "sameAs": []
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": siteConfig.phone,
+      "contactType": "customer service",
+      "areaServed": "SK",
+      "availableLanguage": ["Slovak", "English"]
+    },
+    "sameAs": [
+      "https://www.facebook.com/viamo_stahovanie",
+      "https://www.instagram.com/viamo_stahovanie"
+    ]
   };
 }
 
@@ -49,19 +73,49 @@ export function getServiceSchema(serviceName: string, description: string) {
         "addressCountry": "SK"
       }
     },
-    "areaServed": {
-      "@type": "City",
-      "name": "Bratislava"
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Bratislava"
+      },
+      {
+        "@type": "City",
+        "name": "Trnava"
+      },
+      {
+        "@type": "City",
+        "name": "Pezinok"
+      }
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Sťahovacie služby",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Sťahovanie bytov"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Vypratávanie"
+          }
+        }
+      ]
     }
   };
 }
 
 // BlogPosting structured data
 export function getBlogPostingSchema(post: BlogPost) {
-  const publishedDate = typeof post.publishedAt === 'string' 
-    ? new Date(post.publishedAt) 
+  const publishedDate = typeof post.publishedAt === 'string'
+    ? new Date(post.publishedAt)
     : post.publishedAt;
-    
+
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",

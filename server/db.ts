@@ -1,39 +1,19 @@
-import pg from 'pg';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import * as schema from "@shared/schema";
+// Mock database module for localStorage-based storage
+// No PostgreSQL connection needed
 
-const { Pool } = pg;
+// Export mock pool for compatibility
+export const pool = {
+  connect: async () => ({
+    query: async () => ({ rows: [] }),
+    release: () => { },
+  }),
+  query: async () => ({ rows: [] }),
+};
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
-}
+// Export mock db for compatibility
+export const db = null as any;
 
-export const pool = new Pool({ 
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  connectionTimeoutMillis: 10000,
-  max: 5,
-});
-
-export const db = drizzle(pool, { schema });
-
-export async function testConnection(retries = 3, delay = 2000): Promise<boolean> {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const client = await pool.connect();
-      await client.query('SELECT 1');
-      client.release();
-      console.log('✅ Database connection successful');
-      return true;
-    } catch (err) {
-      console.log(`⚠️ Database connection attempt ${i + 1}/${retries} failed: ${(err as Error).message}`);
-      if (i < retries - 1) {
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    }
-  }
-  console.log('❌ All database connection attempts failed');
-  return false;
+export async function testConnection(): Promise<boolean> {
+  console.log('✅ Using localStorage - no database connection needed');
+  return true;
 }

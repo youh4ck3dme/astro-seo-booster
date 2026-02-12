@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "VI&MO Sťahovanie",
-  baseUrl: "https://stahovanie.website",
+  baseUrl: "https://stahovanie-bratislava.viandmo.com",
   phone: "+421 911 275 755",
   email: "info@viandmo.com",
   addressLine: "Karpatské námestie 7770/10A, 831 06 Bratislava - Rača",

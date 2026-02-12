@@ -23,8 +23,8 @@ export function QuoteForm() {
       name: "",
       email: "",
       phone: "",
-      apartmentSize: "",
-      moveDate: "",
+      apartmentSize: undefined,
+      moveDate: undefined,
       message: "",
     },
   });
@@ -36,7 +36,7 @@ export function QuoteForm() {
     onSuccess: (_, variables) => {
       setSubmitted(true);
       form.reset();
-      trackQuoteRequest(variables.apartmentSize);
+      trackQuoteRequest(variables.apartmentSize || undefined);
       toast({
         title: "Ďakujeme za vašu správu!",
         description: "Ozveme sa vám čo najskôr s cenovou ponukou.",
@@ -90,7 +90,7 @@ export function QuoteForm() {
           orientačnou cenou.
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -102,8 +102,8 @@ export function QuoteForm() {
                   <FormItem>
                     <FormLabel>Meno / Firma *</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="Vaše meno alebo názov firmy" 
+                      <Input
+                        placeholder="Vaše meno alebo názov firmy"
                         {...field}
                         data-testid="input-name"
                       />
@@ -120,8 +120,8 @@ export function QuoteForm() {
                   <FormItem>
                     <FormLabel>Telefón *</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="+421 xxx xxx xxx" 
+                      <Input
+                        placeholder="+421 xxx xxx xxx"
                         type="tel"
                         {...field}
                         data-testid="input-phone"
@@ -141,8 +141,8 @@ export function QuoteForm() {
                   <FormItem>
                     <FormLabel>Email *</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="vas@email.sk" 
+                      <Input
+                        placeholder="vas@email.sk"
                         type="email"
                         {...field}
                         data-testid="input-email"
@@ -160,9 +160,10 @@ export function QuoteForm() {
                   <FormItem>
                     <FormLabel>Veľkosť bytu/domu</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="napr. 2-izbový byt" 
+                      <Input
+                        placeholder="napr. 2-izbový byt"
                         {...field}
+                        value={field.value ?? ""}
                         data-testid="input-apartment-size"
                       />
                     </FormControl>
@@ -179,9 +180,10 @@ export function QuoteForm() {
                 <FormItem>
                   <FormLabel>Preferovaný termín sťahovania</FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder="napr. 15.3.2024 alebo začiatok apríla" 
+                    <Input
+                      placeholder="napr. 15.3.2024 alebo začiatok apríla"
                       {...field}
+                      value={field.value ?? ""}
                       data-testid="input-move-date"
                     />
                   </FormControl>
@@ -197,7 +199,7 @@ export function QuoteForm() {
                 <FormItem>
                   <FormLabel>Poznámka *</FormLabel>
                   <FormControl>
-                    <Textarea 
+                    <Textarea
                       placeholder="Popíšte, čo potrebujete presťahovať, z akého poschodia, či je výťah, atď."
                       className="min-h-[120px] resize-none"
                       {...field}
@@ -210,8 +212,8 @@ export function QuoteForm() {
             />
 
             <div className="flex justify-end">
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 size="lg"
                 disabled={submitMutation.isPending}
                 data-testid="button-submit-quote"

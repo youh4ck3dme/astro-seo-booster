@@ -11,8 +11,8 @@ import { siteConfig } from "@/lib/siteConfig";
 
 export default function Home() {
   const seo = buildSeo({
-    title: "Sťahovanie Bratislava – byty, domy, firmy",
-    description: "Bezstarostné sťahovanie bytov, domov a firiem v Bratislave. VI&MO – balenie, demontáž, prevoz, vypratávanie. Poistenie zodpovednosti, skúsený tím, férové ceny.",
+    title: "Sťahovanie Bratislava | Profesionálne sťahovacie služby VI&MO",
+    description: "Hľadáte spoľahlivé sťahovanie v Bratislave? Sťahujeme byty, domy a firmy rýchlo, bezpečne a s poistením. Získajte nezáväznú cenovú ponuku u VI&MO ešte dnes!",
     path: "/",
   });
 
@@ -28,13 +28,13 @@ export default function Home() {
   return (
     <>
       <SEOHead seo={seo} structuredData={structuredData} />
-      
+
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <HeroSection />
       </div>
-      
+
       <TrustBar />
-      
+
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         <ServicesPreview />
         <MiniPricing />

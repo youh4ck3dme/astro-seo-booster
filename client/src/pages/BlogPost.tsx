@@ -12,6 +12,8 @@ import { Clock, Calendar, ArrowLeft, ArrowRight, User } from "lucide-react";
 import type { BlogPost } from "@shared/schema";
 import { CommentsSection } from "@/components/CommentsSection";
 import { trackBlogRead } from "@/lib/analytics";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -98,7 +100,7 @@ export default function BlogPostPage() {
   return (
     <>
       <SEOHead seo={seo} structuredData={[blogPostingSchema, breadcrumbs]} />
-      
+
       <div className="container mx-auto max-w-7xl px-4 md:px-6 py-12">
         {/* Back to Blog */}
         <div className="max-w-3xl mx-auto mb-8">
@@ -115,8 +117,8 @@ export default function BlogPostPage() {
           {/* Featured Image */}
           {post.featuredImage && (
             <div className="aspect-video overflow-hidden rounded-lg mb-8">
-              <img 
-                src={post.featuredImage} 
+              <img
+                src={post.featuredImage}
                 alt={post.title}
                 className="w-full h-full object-cover"
               />
@@ -167,16 +169,15 @@ export default function BlogPostPage() {
               prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4
               prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-3
               prose-p:leading-relaxed prose-p:mb-4
-              prose-ul:my-6 prose-ul:space-y-2
+              prose-ul:my-6 prose-ul:space-y-4 prose-ul:list-disc prose-ul:pl-6
               prose-li:leading-relaxed
               prose-strong:font-semibold prose-strong:text-foreground
               prose-a:text-primary prose-a:no-underline hover:prose-a:underline"
               data-testid="content-blog-post"
             >
-              {/* Render markdown content as HTML - in production you'd use a markdown parser */}
-              <div dangerouslySetInnerHTML={{ 
-                __html: post.content.replace(/^# /gm, '## ').replace(/\n/g, '<br />') 
-              }} />
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {post.content}
+              </ReactMarkdown>
             </CardContent>
           </Card>
 
@@ -201,7 +202,7 @@ export default function BlogPostPage() {
             <h2 className="font-serif text-2xl font-bold mb-6">
               Súvisiace články
             </h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedPosts.map((relatedPost) => (
                 <Link key={relatedPost.id} href={`/blog/${relatedPost.slug}`}>

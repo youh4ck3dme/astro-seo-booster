@@ -12,6 +12,7 @@ import Pricing from "@/pages/Pricing";
 import Contact from "@/pages/Contact";
 import Blog from "@/pages/Blog";
 import BlogPost from "@/pages/BlogPost";
+import Dashboard from "@/pages/Dashboard";
 import AdminComments from "@/pages/AdminComments";
 import NotFound from "@/pages/not-found";
 import { useEffect } from "react";
@@ -20,7 +21,7 @@ import { useAnalytics } from "@/hooks/use-analytics";
 
 function Router() {
   useAnalytics();
-  
+
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/kontakt" component={Contact} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/admin/dashboard" component={Dashboard} />
       <Route path="/admin/comments" component={AdminComments} />
       <Route component={NotFound} />
     </Switch>
@@ -41,15 +43,15 @@ function App() {
       console.warn('Missing required Google Analytics key: VITE_GA_MEASUREMENT_ID');
     } else {
       initGA();
-      
+
       // Wait for gtag to be available before initializing Web Vitals
       const checkGtag = setInterval(() => {
-        if (typeof window !== 'undefined' && window.gtag) {
+        if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
           clearInterval(checkGtag);
           initWebVitals();
         }
       }, 100);
-      
+
       // Cleanup: clear interval after 10 seconds if gtag never loads
       setTimeout(() => clearInterval(checkGtag), 10000);
     }
