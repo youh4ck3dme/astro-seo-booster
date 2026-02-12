@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import MiniBlog from "../features/home/MiniBlog.astro";
+---
+
+<BaseLayout 
+  title="Blog o sťahovaní – Rady a tipy | Viandmo"
+  description="Čítajte naše články o sťahovaní v Bratislave. Užitočné rady, checklisty a návody ako sa presťahovať bez stresu."
+>
+  <div class="py-12 md:py-20">
+    <div class="container mx-auto max-w-7xl px-4">
+      <h1 class="text-4xl font-bold text-center mb-8">Blog o sťahovaní</h1>
+      <p class="text-center text-gray-600 mb-12">
+        Pripravili sme pre vás sériu článkov s užitočnými informáciami a tipmi.
+      </p>
+      <MiniBlog />
+    </div>
+  </div>
+</BaseLayout>

@@ -4,27 +4,172 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
-  <div class="footer-inner">
-    <p class="footer-text">
-      © {year} {siteConfig.name} – Sťahovanie Bratislava
-    </p>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">
+          <span class="footer-logo-icon">🚚</span>
+          <span class="footer-logo-text">{siteConfig.name}</span>
+        </div>
+        <p class="footer-desc">
+          Bezstarostné sťahovanie bytov, domov a firiem v Bratislave. Profesionálny prístup, férové ceny.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-title">Rýchle odkazy</h3>
+        <ul class="footer-links">
+          <li><a href="/stahovanie">Sťahovanie</a></li>
+          <li><a href="/cennik">Cenník</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-title">Kontakt</h3>
+        <ul class="footer-contact">
+          <li>
+            <span class="icon">📞</span>
+            <a href={`tel:${siteConfig.phone.replace(/\s/g, '')}`}>{siteConfig.phone}</a>
+          </li>
+          <li>
+            <span class="icon">✉️</span>
+            <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+          </li>
+          <li>
+            <span class="icon">📍</span>
+            <span>{siteConfig.addressLine}</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3 class="footer-title">Údaje o firme</h3>
+        <ul class="footer-legal">
+          <li>IČO: {siteConfig.ico}</li>
+          <li>DIČ: {siteConfig.dic}</li>
+          <li class="insurance-badge">✓ Poistenie zodpovednosti</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© {year} {siteConfig.name} – Sťahovanie Bratislava. Všetky práva vyhradené.</p>
+    </div>
   </div>
 </footer>
 
 <style>
   .footer {
-    border-top: 1px solid #e5e7eb;
-    padding: 32px 16px;
-    background: white;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    padding: 64px 0 32px;
     margin-top: 64px;
   }
-  .footer-inner {
+  .container {
     max-width: 1120px;
     margin: 0 auto;
-    text-align: center;
+    padding: 0 16px;
   }
-  .footer-text {
-    font-size: 0.875rem;
-    color: #6b7280;
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 48px;
+    margin-bottom: 64px;
+  }
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .footer-logo-icon {
+    font-size: 20px;
+  }
+  .footer-logo-text {
+    font-size: 18px;
+    font-weight: 800;
+    color: #111827;
+  }
+  .footer-desc {
+    font-size: 14px;
+    color: #64748b;
+    line-height: 1.6;
+  }
+  .footer-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .footer-links a {
+    font-size: 14px;
+    color: #64748b;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .footer-links a:hover {
+    color: #111827;
+  }
+  .footer-contact {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .footer-contact li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: #64748b;
+  }
+  .footer-contact a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .footer-contact a:hover {
+    color: #111827;
+  }
+  .icon {
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .footer-legal {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 14px;
+    color: #64748b;
+  }
+  .insurance-badge {
+    display: inline-block;
+    background: #f1f5f9;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+    color: #065f46;
+  }
+  .footer-bottom {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 32px;
+    text-align: center;
+    font-size: 13px;
+    color: #94a3b8;
   }
 </style>
