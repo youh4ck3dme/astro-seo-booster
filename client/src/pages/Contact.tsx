@@ -22,39 +22,38 @@ export default function Contact() {
   return (
     <>
       <SEOHead seo={seo} structuredData={breadcrumbs} />
-      
+
       <div className="container mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16">
         <div className="space-y-12">
           {/* Header */}
-          <div className="space-y-4">
-            <h1 className="font-serif text-4xl md:text-5xl font-bold">
+          <div className="space-y-4 animate-in-fade">
+            <h1 className="font-serif text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Kontakt
             </h1>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-xl text-muted-foreground">
               Sme tu pre vás. Kontaktujte nás telefonicky, emailom alebo vyplňte formulár.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Contact Information */}
-            <div className="space-y-6">
-              <Card>
+            <div className="space-y-6 animate-in-slide-up [animation-delay:200ms]">
+              <Card className="glass-card border-0 overflow-hidden">
                 <CardHeader>
-                  <CardTitle className="font-serif text-2xl">
+                  <CardTitle className="font-serif text-2xl text-primary">
                     Kontaktné údaje
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <Phone className="h-5 w-5 text-primary" />
+                  <div className="flex items-start gap-4 group cursor-pointer" onClick={trackPhoneClick}>
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                      <Phone className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <div className="font-medium mb-1">Telefón</div>
-                      <a 
+                      <div className="font-semibold text-lg mb-1">Telefón</div>
+                      <a
                         href={`tel:${siteConfig.phone.replace(/\s/g, '')}`}
-                        className="text-primary hover:underline"
-                        onClick={trackPhoneClick}
+                        className="text-primary text-xl font-bold hover:underline"
                         data-testid="link-contact-phone"
                       >
                         {siteConfig.phone}
@@ -65,16 +64,15 @@ export default function Contact() {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <Mail className="h-5 w-5 text-primary" />
+                  <div className="flex items-start gap-4 group cursor-pointer" onClick={trackEmailClick}>
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                      <Mail className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <div className="font-medium mb-1">Email</div>
-                      <a 
+                      <div className="font-semibold text-lg mb-1">Email</div>
+                      <a
                         href={`mailto:${siteConfig.email}`}
-                        className="text-primary hover:underline"
-                        onClick={trackEmailClick}
+                        className="text-primary text-xl font-bold hover:underline"
                         data-testid="link-contact-email"
                       >
                         {siteConfig.email}
@@ -86,24 +84,24 @@ export default function Contact() {
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="h-5 w-5 text-primary" />
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <div className="font-medium mb-1">Adresa</div>
-                      <p className="text-muted-foreground">
+                      <div className="font-semibold text-lg mb-1">Adresa</div>
+                      <p className="text-muted-foreground text-lg">
                         {siteConfig.addressLine}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <FileText className="h-5 w-5 text-primary" />
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <FileText className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <div className="font-medium mb-1">Firemné údaje</div>
-                      <div className="text-sm text-muted-foreground space-y-1">
+                      <div className="font-semibold text-lg mb-1">Firemné údaje</div>
+                      <div className="text-muted-foreground space-y-1">
                         <p>IČO: {siteConfig.ico}</p>
                         <p>DIČ: {siteConfig.dic}</p>
                       </div>

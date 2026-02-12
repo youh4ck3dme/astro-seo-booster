@@ -275,12 +275,8 @@
     pointer-events: none;
   }
 
-  /* .no-default-hover-elevate/no-default-active-elevate is an escape hatch so consumers of
-   * buttons/badges can remove the automatic brightness adjustment on interactions
-   * and program their own. */
-  .no-default-hover-elevate {}
-
-  .no-default-active-elevate {}
+  /* .no-default-hover-elevate/no-default-active-elevate are used as markers 
+     for the elevation system in other components. */
 
 
   /**

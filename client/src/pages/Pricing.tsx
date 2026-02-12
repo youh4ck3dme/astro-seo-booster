@@ -58,25 +58,25 @@ export default function Pricing() {
   return (
     <>
       <SEOHead seo={seo} structuredData={breadcrumbs} />
-      
+
       <div className="container mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16">
         <div className="space-y-12">
           {/* Header */}
-          <div className="space-y-6">
-            <h1 className="font-serif text-4xl md:text-5xl font-bold">
+          <div className="space-y-6 animate-in-fade">
+            <h1 className="font-serif text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Cenník služieb
             </h1>
-            
-            <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">
+
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
               Ceny sú orientačné. Presnú ponuku pripravíme podľa vašich potrieb,
               množstva nábytku, poschodia a vzdialenosti.
             </p>
           </div>
 
           {/* Apartment Moving Prices */}
-          <Card>
+          <Card className="glass-card animate-in-slide-up [animation-delay:200ms] border-0">
             <CardHeader>
-              <CardTitle className="font-serif text-2xl">
+              <CardTitle className="font-serif text-2xl text-primary">
                 Sťahovanie bytov
               </CardTitle>
             </CardHeader>
@@ -86,9 +86,9 @@ export default function Pricing() {
           </Card>
 
           {/* Workers Pricing */}
-          <Card>
+          <Card className="glass-card animate-in-slide-up [animation-delay:300ms] border-0">
             <CardHeader>
-              <CardTitle className="font-serif text-2xl">
+              <CardTitle className="font-serif text-2xl text-primary">
                 Pracovníci
               </CardTitle>
             </CardHeader>
@@ -98,9 +98,9 @@ export default function Pricing() {
           </Card>
 
           {/* Transport Pricing */}
-          <Card>
+          <Card className="glass-card animate-in-slide-up [animation-delay:400ms] border-0">
             <CardHeader>
-              <CardTitle className="font-serif text-2xl">
+              <CardTitle className="font-serif text-2xl text-primary">
                 Doprava
               </CardTitle>
             </CardHeader>
